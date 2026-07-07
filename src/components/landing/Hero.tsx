@@ -69,7 +69,7 @@ export default function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-navy leading-[1.08] mb-6"
+          className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-navy leading-[1.12] mb-5"
         >
           Land Your Dream Job
           <br />
@@ -88,7 +88,7 @@ export default function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto mb-10 leading-relaxed font-medium"
+          className="text-base sm:text-lg text-slate-600 max-w-xl mx-auto mb-8 leading-relaxed"
         >
           JobBlitz finds and applies to jobs across 500,000+ company career pages on your behalf.
           Set your preferences once — our AI handles everything else.

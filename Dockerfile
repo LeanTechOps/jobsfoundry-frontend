@@ -16,14 +16,20 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
+# Use a build argument to determine which build script to run
+# Default: build:qa (used when building locally without --build-arg)
+# CI will override this with build:prod (main) or build:qa (qa branch)
+ARG BUILD_SCRIPT=build:qa
+
 # Print build information
 RUN echo "=== Build Configuration ===" && \
+    echo "BUILD_SCRIPT: $BUILD_SCRIPT" && \
     echo "NODE_ENV: $NODE_ENV" && \
     echo "NEXT_PUBLIC_API_URL: $NEXT_PUBLIC_API_URL" && \
     echo "APP_ENV: $APP_ENV" && \
     echo "=========================="
 
-RUN npm run build
+RUN npm run $BUILD_SCRIPT
 
 # Stage 2: Serve
 FROM node:22-alpine AS runner

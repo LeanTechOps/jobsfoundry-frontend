@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
-    "build": "next build",
+    "build": "dotenv -e .env.qa -- next build",
+    "build:qa": "dotenv -e .env.qa -- next build",
+    "build:prod": "dotenv -e .env.prod -- next build",
     "start": "next start -p 4000",
     "lint": "eslint"
   },
@@ -22,6 +24,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "dotenv-cli": "^7.4.4",
     "@fontsource/inter": "^5.2.8",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
