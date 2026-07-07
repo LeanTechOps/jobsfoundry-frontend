@@ -8,17 +8,26 @@ import { toast } from 'react-toastify'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
-interface StripePlan {
+interface ApiPlan {
   id: string
+  name: string
+  price: number
+  interval: string  // 'month' | 'year'
   stripePriceId: string
+  popular: boolean
 }
 
-const PLANS = [
+interface PlanPriceData {
+  monthly?: { price: number; priceId: string }
+  annual?: { perMonth: number; total: number; priceId: string }
+}
+
+const STATIC_PLANS = [
   {
     id: 'free',
     name: 'Free',
-    monthly: 'Free',
-    annual: '—',
+    staticMonthly: 0,
+    staticAnnual: null,
     includes: '5 auto-applications/day. Basic tracker. No credit card.',
     popular: false,
     cta: 'Get Started',
@@ -26,8 +35,8 @@ const PLANS = [
   {
     id: 'pro',
     name: 'Pro',
-    monthly: '$29/mo',
-    annual: '$19/mo',
+    staticMonthly: 29,
+    staticAnnual: 19,
     includes: '50 applications/day. AI resume tailoring, cover letter generator, full analytics.',
     popular: true,
     cta: 'Start Pro',
@@ -35,8 +44,8 @@ const PLANS = [
   {
     id: 'business',
     name: 'Business',
-    monthly: '$79/mo',
-    annual: '$55/mo',
+    staticMonthly: 79,
+    staticAnnual: 55,
     includes: '200 applications/day. Everything in Pro, plus hiring manager outreach, A/B testing and API access.',
     popular: false,
     cta: 'Start Business',
@@ -53,21 +62,55 @@ const WHATS_INCLUDED = [
 
 export default function PricingPage() {
   const { isAuthenticated, subscription } = useAuth()
+  const [annual, setAnnual] = useState(false)
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
-  const [stripePlans, setStripePlans] = useState<StripePlan[]>([])
+  const [priceData, setPriceData] = useState<Record<string, PlanPriceData>>({})
+  const [pricesLoading, setPricesLoading] = useState(true)
   const currentPlan = (subscription?.plan ?? 'FREE').toLowerCase()
 
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const plans = await api.get<StripePlan[]>('/stripe/pricing')
-        setStripePlans(plans)
+        const plans = await api.get<ApiPlan[]>('/stripe/pricing')
+        const data: Record<string, PlanPriceData> = {}
+        for (const plan of plans) {
+          if (!data[plan.id]) data[plan.id] = {}
+          if (plan.interval === 'month') {
+            data[plan.id].monthly = { price: plan.price, priceId: plan.stripePriceId }
+          } else if (plan.interval === 'year') {
+            data[plan.id].annual = {
+              total: plan.price,
+              perMonth: Math.round((plan.price / 12) * 100) / 100,
+              priceId: plan.stripePriceId,
+            }
+          }
+        }
+        setPriceData(data)
       } catch {
-        // pricing UI still visible; checkout will surface an error if user tries to subscribe
+        // prices will fall back to static values
+      } finally {
+        setPricesLoading(false)
       }
     }
     fetchPlans()
   }, [])
+
+  const getDisplayPrice = (planId: string, staticMonthly: number | null, staticAnnual: number | null) => {
+    if (planId === 'free') return { monthly: 'Free', annual: '—' }
+    const pd = priceData[planId]
+    const monthlyNum = pd?.monthly?.price ?? staticMonthly
+    const annualNum = pd?.annual?.perMonth ?? staticAnnual
+    return {
+      monthly: monthlyNum != null ? `$${monthlyNum}/mo` : '—',
+      annual: annualNum != null ? `$${annualNum}/mo` : '—',
+    }
+  }
+
+  const getActivePriceId = (planId: string) => {
+    const pd = priceData[planId]
+    if (!pd) return null
+    return annual ? (pd.annual?.priceId ?? pd.monthly?.priceId) : (pd.monthly?.priceId ?? pd.annual?.priceId)
+  }
 
   const handleSelectPlan = async (planId: string) => {
     if (planId === 'free') {
@@ -78,15 +121,15 @@ export default function PricingPage() {
       window.location.href = '/login'
       return
     }
-    const match = stripePlans.find((p) => p.id === planId)
-    if (!match?.stripePriceId) {
+    const priceId = getActivePriceId(planId)
+    if (!priceId) {
       toast.error('This plan is not yet available. Please try again later.')
       return
     }
     setLoadingPlan(planId)
     try {
       const { url } = await api.post<{ url: string }>('/stripe/create-subscription-session', {
-        stripePriceId: match.stripePriceId,
+        stripePriceId: priceId,
       })
       window.location.href = url
     } catch (err: unknown) {
@@ -96,6 +139,10 @@ export default function PricingPage() {
     }
   }
 
+  const PriceSkeleton = () => (
+    <span className="inline-block w-14 h-4 bg-slate-200 rounded animate-pulse" />
+  )
+
   return (
     <>
       <Navbar />
@@ -104,7 +151,7 @@ export default function PricingPage() {
         <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
 
           {/* Page header */}
-          <div className="mb-16">
+          <div className="mb-12">
             <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-4">
               Pricing
             </p>
@@ -113,8 +160,25 @@ export default function PricingPage() {
             </h1>
             <p className="text-slate-500 text-lg max-w-2xl leading-relaxed">
               No &quot;contact us&quot; for paid plans. No login required to see what you&apos;re paying for.
-              Prices are charged in USD. Annual prices shown when billed yearly.
+              Prices are charged in USD.
             </p>
+          </div>
+
+          {/* Billing toggle */}
+          <div className="flex items-center gap-4 mb-12">
+            <span className={`text-sm font-medium ${!annual ? 'text-navy' : 'text-slate-400'}`}>Monthly</span>
+            <button
+              onClick={() => setAnnual(!annual)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-blue-accent focus-visible:ring-offset-2 cursor-pointer ${annual ? 'bg-blue-accent' : 'bg-slate-200'}`}
+            >
+              <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${annual ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+            <span className={`text-sm font-medium ${annual ? 'text-navy' : 'text-slate-400'}`}>Annually</span>
+            {annual && (
+              <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-200">
+                Save up to 34%
+              </span>
+            )}
           </div>
 
           {/* ── Section: Auto-Apply Plans ─────────────────────────── */}
@@ -127,23 +191,26 @@ export default function PricingPage() {
 
             <div className="border border-slate-200 rounded-xl overflow-hidden">
               {/* Table header */}
-              <div className="grid grid-cols-[160px_110px_110px_1fr_140px] bg-slate-50 border-b border-slate-200">
+              <div className="grid grid-cols-[160px_120px_1fr_140px] bg-slate-50 border-b border-slate-200">
                 <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Plan</div>
-                <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Monthly</div>
-                <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Annual</div>
+                <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  {annual ? 'Annual /mo' : 'Monthly'}
+                </div>
                 <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Includes</div>
                 <div className="px-5 py-3" />
               </div>
 
               {/* Rows */}
-              {PLANS.map((plan) => {
+              {STATIC_PLANS.map((plan) => {
                 const isCurrent = currentPlan === plan.id
                 const isLoading = loadingPlan === plan.id
+                const prices = getDisplayPrice(plan.id, plan.staticMonthly, plan.staticAnnual)
+                const activePrice = annual ? prices.annual : prices.monthly
 
                 return (
                   <div
                     key={plan.id}
-                    className={`grid grid-cols-[160px_110px_110px_1fr_140px] items-start border-b border-slate-100 last:border-0 transition-colors duration-150 ${
+                    className={`grid grid-cols-[160px_120px_1fr_140px] items-start border-b border-slate-100 last:border-0 transition-colors duration-150 ${
                       plan.popular ? 'bg-blue-50/60' : 'bg-white hover:bg-slate-50/60'
                     }`}
                   >
@@ -159,16 +226,26 @@ export default function PricingPage() {
                       </div>
                     </div>
 
-                    {/* Monthly price */}
+                    {/* Active price */}
                     <div className="px-5 py-5">
-                      <span className={`text-sm font-semibold ${plan.popular ? 'text-blue-accent' : 'text-navy'}`}>
-                        {plan.monthly}
-                      </span>
-                    </div>
-
-                    {/* Annual price */}
-                    <div className="px-5 py-5">
-                      <span className="text-sm text-slate-500">{plan.annual}</span>
+                      {pricesLoading && plan.id !== 'free' ? (
+                        <PriceSkeleton />
+                      ) : (
+                        <div>
+                          <span className={`text-sm font-semibold ${plan.popular ? 'text-blue-accent' : 'text-navy'}`}>
+                            {activePrice}
+                          </span>
+                          {annual && plan.id !== 'free' && !pricesLoading && (() => {
+                            const pd = priceData[plan.id]
+                            const total = pd?.annual?.total ?? (plan.staticAnnual != null ? plan.staticAnnual * 12 : null)
+                            return total != null ? (
+                              <p className="text-[11px] text-slate-400 mt-0.5">
+                                billed ${total}/yr
+                              </p>
+                            ) : null
+                          })()}
+                        </div>
+                      )}
                     </div>
 
                     {/* Includes */}
@@ -201,7 +278,7 @@ export default function PricingPage() {
             </div>
 
             <p className="text-xs text-slate-400 mt-3">
-              Annual billing saves up to 34%. You can switch between monthly and annual at any time.
+              Annual billing saves up to 34%. You can switch between monthly and annual at any time from your dashboard.
             </p>
           </section>
 
@@ -227,7 +304,7 @@ export default function PricingPage() {
             </div>
           </section>
 
-          {/* ── Billing notes — drivetube style ──────────────────── */}
+          {/* ── Billing notes ─────────────────────────────────────── */}
           <div className="border-t border-slate-200 pt-10 text-sm text-slate-500 space-y-2 leading-relaxed">
             <p>
               Billing terms, taxes and renewals are documented in{' '}

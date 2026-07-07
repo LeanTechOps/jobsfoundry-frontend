@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { CheckIcon } from '@heroicons/react/24/solid'
+import { api } from '@/lib/api'
+
+interface ApiPlan {
+  id: string
+  price: number
+  interval: string  // 'month' | 'year'
+}
 
 export const PLANS = [
   {
@@ -104,6 +111,29 @@ export default function PricingSection({
   showComparisonTable = true,
 }: PricingSectionProps) {
   const [annual, setAnnual] = useState(false)
+  // Live prices fetched from backend; keyed by plan id
+  const [livePrices, setLivePrices] = useState<Record<string, { monthly?: number; annual?: number }>>({})
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const plans = await api.get<ApiPlan[]>('/stripe/pricing')
+        const data: Record<string, { monthly?: number; annual?: number }> = {}
+        for (const plan of plans) {
+          if (!data[plan.id]) data[plan.id] = {}
+          if (plan.interval === 'month') {
+            data[plan.id].monthly = plan.price
+          } else if (plan.interval === 'year') {
+            data[plan.id].annual = Math.round((plan.price / 12) * 100) / 100
+          }
+        }
+        setLivePrices(data)
+      } catch {
+        // silently fall back to static plan values
+      }
+    }
+    fetchPrices()
+  }, [])
 
   return (
     <section id="pricing" className="bg-white py-20 sm:py-28">
@@ -143,7 +173,10 @@ export default function PricingSection({
         {/* Plan cards */}
         <div className="grid md:grid-cols-3 gap-6 items-start mb-16">
           {PLANS.map((plan, i) => {
-            const price = annual ? plan.annualPrice : plan.monthlyPrice
+            const lp = livePrices[plan.id]
+            const monthlyPrice = lp?.monthly ?? plan.monthlyPrice
+            const annualPrice = lp?.annual ?? plan.annualPrice
+            const price = annual ? annualPrice : monthlyPrice
 
             return (
               <motion.div
@@ -186,9 +219,9 @@ export default function PricingSection({
                         </span>
                       )}
                     </div>
-                    {annual && plan.monthlyPrice > 0 && (
+                    {annual && monthlyPrice > 0 && (
                       <p className={`text-xs mt-1 ${plan.highlighted ? 'text-blue-300' : 'text-slate-400'}`}>
-                        Billed ${plan.annualPrice * 12}/yr · Save ${(plan.monthlyPrice - plan.annualPrice) * 12}/yr
+                        Billed ${Math.round(annualPrice * 12)}/yr · Save ${Math.round((monthlyPrice - annualPrice) * 12)}/yr
                       </p>
                     )}
                     {plan.monthlyPrice === 0 && (
