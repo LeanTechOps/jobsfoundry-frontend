@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRightIcon, PlayIcon } from '@heroicons/react/24/solid'
+import { ArrowRightIcon, BoltIcon } from '@heroicons/react/24/solid'
+import { CheckCircleIcon } from '@heroicons/react/24/outline'
 
 const STATS = [
   { value: '500K+', label: 'Companies reached' },
@@ -10,40 +11,56 @@ const STATS = [
   { value: '3×', label: 'More interviews' },
 ]
 
+const TRUST_BULLETS = [
+  'No credit card required',
+  'Free plan available',
+  'Cancel anytime',
+]
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 16 },
   show: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' },
+    transition: { delay: i * 0.1, duration: 0.45, ease: 'easeOut' },
   }),
 }
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white pt-28 pb-20 sm:pt-36 sm:pb-28">
-      {/* Subtle background grid */}
+    <section className="relative overflow-hidden bg-white pt-24 pb-14 sm:pt-28 sm:pb-16">
+      {/* Grid */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:64px_64px] opacity-40"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:64px_64px] opacity-30"
       />
-      {/* Radial glow */}
+      {/* Stronger top gradient glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-blue-50 blur-3xl opacity-60"
+        className="pointer-events-none absolute -top-60 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-gradient-to-br from-blue-100 via-blue-50 to-transparent blur-3xl opacity-80"
+      />
+      {/* Side accent blobs */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-1/2 -left-64 w-[400px] h-[400px] rounded-full bg-violet-100/60 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-1/3 -right-64 w-[400px] h-[400px] rounded-full bg-blue-100/50 blur-3xl"
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
         {/* Badge */}
         <motion.div
           custom={0}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="inline-flex items-center gap-2 bg-blue-muted border border-blue-200 text-blue-accent text-xs font-semibold px-3.5 py-1.5 rounded-full mb-8 cursor-default select-none"
+          className="inline-flex items-center gap-2 bg-blue-accent text-white text-xs font-bold px-4 py-1.5 rounded-full mb-8 shadow-md shadow-blue-200 select-none cursor-default"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-accent animate-pulse" />
-          Now powered by AI — smarter applications, better matches
+          <BoltIcon className="w-3.5 h-3.5" />
+          AI-powered · Apply to 100+ jobs daily automatically
         </motion.div>
 
         {/* Headline */}
@@ -52,11 +69,17 @@ export default function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-navy leading-[1.1] mb-6"
+          className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-navy leading-[1.08] mb-6"
         >
-          Apply to 100+ Jobs Daily,
+          Land Your Dream Job
           <br />
-          <span className="text-blue-accent">Automatically</span>
+          <span className="relative inline-block">
+            <span className="text-blue-accent">10× Faster.</span>
+            <span
+              aria-hidden
+              className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-gradient-to-r from-blue-400 via-blue-accent to-blue-400 opacity-70"
+            />
+          </span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -65,10 +88,10 @@ export default function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg sm:text-xl text-slate-700 max-w-2xl mx-auto mb-10 leading-relaxed font-medium"
         >
           JobBlitz finds and applies to jobs across 500,000+ company career pages on your behalf.
-          Set your preferences once — let AI handle the rest.
+          Set your preferences once — our AI handles everything else.
         </motion.p>
 
         {/* CTAs */}
@@ -77,64 +100,85 @@ export default function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8"
         >
           <Link
             href="/login?plan=free"
-            className="group inline-flex items-center gap-2 bg-blue-accent hover:bg-blue-500 active:scale-95 text-white font-semibold px-6 py-3.5 rounded-lg transition-all duration-150 shadow-lg shadow-blue-100 hover:shadow-xl hover:shadow-blue-100 cursor-pointer select-none"
+            className="group inline-flex items-center gap-2 bg-blue-accent hover:bg-blue-500 active:scale-95 text-white font-bold px-8 py-4 rounded-xl transition-all duration-150 shadow-xl shadow-blue-200 hover:shadow-2xl hover:shadow-blue-200 text-base cursor-pointer select-none"
           >
             Get Started Free
-            <ArrowRightIcon className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5" />
+            <ArrowRightIcon className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />
           </Link>
           <Link
-            href="/#how-it-works"
-            className="group inline-flex items-center gap-2 bg-white hover:bg-slate-50 active:scale-95 text-navy font-semibold px-6 py-3.5 rounded-lg border border-slate-200 hover:border-slate-300 transition-all duration-150 cursor-pointer select-none"
+            href="/pricing"
+            className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 active:scale-95 text-navy font-bold px-8 py-4 rounded-xl border-2 border-slate-200 hover:border-slate-300 transition-all duration-150 text-base cursor-pointer select-none"
           >
-            <PlayIcon className="w-4 h-4 text-blue-accent transition-transform duration-150 group-hover:scale-110" />
-            See How It Works
+            View Pricing
           </Link>
         </motion.div>
 
-        {/* Social proof */}
+        {/* Trust bullets */}
         <motion.div
           custom={4}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="flex items-center justify-center gap-3 mb-12"
+          className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 mb-12"
         >
-          {/* Mini avatar stack */}
-          <div className="flex -space-x-2">
-            {['bg-violet-500','bg-blue-accent','bg-rose-500','bg-emerald-600','bg-amber-500'].map((bg, i) => (
-              <div
-                key={i}
-                className={`w-7 h-7 rounded-full ${bg} border-2 border-white flex items-center justify-center text-white text-[10px] font-bold select-none`}
-              >
-                {String.fromCharCode(65 + i)}
-              </div>
-            ))}
-          </div>
-          <p className="text-sm text-slate-400">
-            <span className="text-slate-700 font-semibold">50,000+</span> job seekers trust JobBlitz
-            {' '}· <span className="text-slate-500">no credit card</span>
-          </p>
+          {TRUST_BULLETS.map((b) => (
+            <span key={b} className="flex items-center gap-1.5 text-sm text-slate-600 font-medium">
+              <CheckCircleIcon className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+              {b}
+            </span>
+          ))}
         </motion.div>
 
-        {/* Stats */}
+        {/* Social proof */}
         <motion.div
           custom={5}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-3 gap-4 max-w-lg mx-auto"
+          className="flex items-center justify-center gap-4 mb-12"
+        >
+          <div className="flex -space-x-2.5">
+            {[
+              { bg: 'bg-violet-500', l: 'A' },
+              { bg: 'bg-blue-accent', l: 'B' },
+              { bg: 'bg-rose-500', l: 'C' },
+              { bg: 'bg-emerald-600', l: 'D' },
+              { bg: 'bg-amber-500', l: 'E' },
+              { bg: 'bg-sky-500', l: 'F' },
+            ].map(({ bg, l }, i) => (
+              <div
+                key={i}
+                className={`w-9 h-9 rounded-full ${bg} border-[2.5px] border-white flex items-center justify-center text-white text-xs font-bold select-none shadow-sm`}
+              >
+                {l}
+              </div>
+            ))}
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-navy">50,000+ job seekers</p>
+            <p className="text-xs text-slate-500">trust JobBlitz every day</p>
+          </div>
+        </motion.div>
+
+        {/* Stats strip */}
+        <motion.div
+          custom={6}
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-3 gap-4 max-w-md mx-auto"
         >
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-slate-200 transition-all duration-200 cursor-default"
+              className="bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-blue-100 transition-all duration-200 cursor-default"
             >
               <p className="text-2xl font-extrabold text-navy">{stat.value}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{stat.label}</p>
+              <p className="text-xs font-medium text-slate-600 mt-0.5">{stat.label}</p>
             </div>
           ))}
         </motion.div>

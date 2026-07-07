@@ -23,6 +23,7 @@ interface Subscription {
   plan: string
   status: string
   currentPeriodEnd: string | null
+  billingCycle: 'MONTHLY' | 'YEARLY' | 'QUARTERLY' | null
 }
 
 interface AuthContextType {

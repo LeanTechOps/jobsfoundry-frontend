@@ -7,49 +7,41 @@ import { api } from '@/lib/api'
 import { toast } from 'react-toastify'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-
-interface ApiPlan {
-  id: string
-  name: string
-  price: number
-  interval: string  // 'month' | 'year'
-  stripePriceId: string
-  popular: boolean
-}
+import type { ApiPlan } from '@/types/pricing'
 
 interface PlanPriceData {
   monthly?: { price: number; priceId: string }
   annual?: { perMonth: number; total: number; priceId: string }
 }
 
-const STATIC_PLANS = [
-  {
-    id: 'free',
-    name: 'Free',
-    staticMonthly: 0,
-    includes: '5 auto-applications/day. Basic tracker. No credit card.',
-    popular: false,
-    cta: 'Get Started',
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    staticMonthly: 29,
-    includes: '50 applications/day. AI resume tailoring, cover letter generator, full analytics.',
-    popular: true,
-    cta: 'Start Pro',
-  },
-  {
-    id: 'business',
-    name: 'Business',
-    staticMonthly: 79,
-    includes: '200 applications/day. Everything in Pro, plus hiring manager outreach, A/B testing and API access.',
-    popular: false,
-    cta: 'Start Business',
-  },
-]
+// Static includes copy per plan
+const PLAN_INCLUDES = {
+  free: [
+    'Up to 5 auto-applications/day',
+    '1 resume profile',
+    'Basic job tracker',
+    'Application status tracking',
+    'Job search access — no credit card required',
+  ],
+  pro: [
+    'Up to 50 auto-applications/day',
+    '5 resume profiles',
+    'AI resume tailoring per job',
+    'AI cover letter generator',
+    'Full application analytics',
+    'Priority email support',
+  ],
+  business: [
+    'Everything in Pro',
+    'Up to 200 auto-applications/day',
+    'Unlimited resume profiles',
+    'Hiring manager email outreach',
+    'A/B testing for job titles',
+    'Dedicated account support',
+  ],
+}
 
-const WHATS_INCLUDED = [
+const INCLUDED_IN_ALL_PAID = [
   'Works on all major ATS systems (Workday, Greenhouse, Lever, iCIMS, Taleo and more)',
   'Application status tracking and job tracker dashboard',
   'Resume profile storage',
@@ -59,11 +51,12 @@ const WHATS_INCLUDED = [
 
 export default function PricingPage() {
   const { isAuthenticated, subscription } = useAuth()
-  const [annual, setAnnual] = useState(false)
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
   const [priceData, setPriceData] = useState<Record<string, PlanPriceData>>({})
   const [pricesLoading, setPricesLoading] = useState(true)
   const currentPlan = (subscription?.plan ?? 'FREE').toLowerCase()
+  // 'YEARLY' → 'year', 'MONTHLY' / null → 'month'
+  const currentInterval = subscription?.billingCycle === 'YEARLY' ? 'year' : 'month'
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -84,7 +77,7 @@ export default function PricingPage() {
         }
         setPriceData(data)
       } catch {
-        // prices will fall back to static values
+        // fall back to static prices
       } finally {
         setPricesLoading(false)
       }
@@ -92,28 +85,7 @@ export default function PricingPage() {
     fetchPlans()
   }, [])
 
-  // Only show the annual toggle if at least one paid plan has an annual price from Stripe
-  const hasAnyAnnual = Object.values(priceData).some((pd) => pd.annual)
-
-  const getDisplayPrice = (planId: string, staticMonthly: number | null) => {
-    if (planId === 'free') return { monthly: 'Free', annual: null }
-    const pd = priceData[planId]
-    const monthlyNum = pd?.monthly?.price ?? staticMonthly
-    const annualPerMonth = pd?.annual?.perMonth ?? null  // null = no annual plan in Stripe
-    return {
-      monthly: monthlyNum != null ? `$${monthlyNum}/mo` : '—',
-      annual: annualPerMonth != null ? `$${annualPerMonth}/mo` : null,
-    }
-  }
-
-  const getActivePriceId = (planId: string) => {
-    const pd = priceData[planId]
-    if (!pd) return null
-    if (annual && pd.annual) return pd.annual.priceId
-    return pd.monthly?.priceId ?? null
-  }
-
-  const handleSelectPlan = async (planId: string) => {
+  const handleSelectPlan = async (planId: string, priceId?: string) => {
     if (planId === 'free') {
       window.location.href = isAuthenticated ? '/dashboard' : '/login?plan=free'
       return
@@ -122,12 +94,11 @@ export default function PricingPage() {
       window.location.href = `/login?plan=${planId}`
       return
     }
-    const priceId = getActivePriceId(planId)
     if (!priceId) {
       toast.error('This plan is not yet available. Please try again later.')
       return
     }
-    setLoadingPlan(planId)
+    setLoadingPlan(priceId)
     try {
       const { url } = await api.post<{ url: string }>('/stripe/create-subscription-session', {
         stripePriceId: priceId,
@@ -141,8 +112,17 @@ export default function PricingPage() {
   }
 
   const PriceSkeleton = () => (
-    <span className="inline-block w-14 h-4 bg-slate-200 rounded animate-pulse" />
+    <span className="inline-block w-16 h-4 bg-slate-200 rounded animate-pulse align-middle" />
   )
+
+  // A row is "current" only if both plan AND billing interval match
+  const isCurrent = (planId: string, interval: 'month' | 'year' = 'month') =>
+    currentPlan === planId && currentInterval === interval
+
+  // ── Shared table styles ──────────────────────────────────────────────────────
+  const tableHeaderCls = 'border border-slate-200 rounded-xl overflow-hidden mb-3'
+  const colHeader = 'px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50 border-b border-slate-200'
+  const cell = 'px-5 py-4'
 
   return (
     <>
@@ -152,153 +132,231 @@ export default function PricingPage() {
         <main className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
 
           {/* Page header */}
-          <div className="mb-12">
-            <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-4">
-              Pricing
-            </p>
+          <div className="mb-16">
+            <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-4">Pricing</p>
             <h1 className="text-4xl sm:text-5xl font-extrabold text-navy mb-5 leading-tight">
               Every plan, real numbers.
             </h1>
-            <p className="text-slate-500 text-lg max-w-2xl leading-relaxed">
-              No &quot;contact us&quot; for paid plans. No login required to see what you&apos;re paying for.
+            <p className="text-slate-600 text-lg max-w-2xl leading-relaxed">
+              No &ldquo;contact us&rdquo; for paid plans. No login required to see what you&apos;re paying for.
               Prices are charged in USD.
             </p>
           </div>
 
-          {/* Billing toggle — only shown if Stripe has annual prices */}
-          {hasAnyAnnual && (
-            <div className="flex items-center gap-4 mb-12">
-              <span className={`text-sm font-medium ${!annual ? 'text-navy' : 'text-slate-400'}`}>Monthly</span>
-              <button
-                onClick={() => setAnnual(!annual)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-blue-accent focus-visible:ring-offset-2 cursor-pointer ${annual ? 'bg-blue-accent' : 'bg-slate-200'}`}
-              >
-                <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${annual ? 'translate-x-6' : 'translate-x-1'}`} />
-              </button>
-              <span className={`text-sm font-medium ${annual ? 'text-navy' : 'text-slate-400'}`}>Annually</span>
-              {annual && (
-                <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-200">
-                  Save up to 34%
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* ── Section: Auto-Apply Plans ─────────────────────────── */}
+          {/* ── FREE ────────────────────────────────────────────────────────────── */}
           <section className="mb-16">
-            <h2 className="text-2xl font-bold text-navy mb-2">Auto-Apply Plans</h2>
-            <p className="text-slate-500 text-sm mb-8 leading-relaxed max-w-2xl">
-              JobBlitz applies to jobs on your behalf across 500,000+ company career pages — filled, submitted,
-              and tracked automatically. Choose the volume that fits your search.
+            <h2 className="text-2xl font-bold text-navy mb-2">Free Plan</h2>
+            <p className="text-slate-600 text-sm mb-6 leading-relaxed max-w-2xl">
+              Start applying to jobs automatically with no credit card. Great for exploring the platform.
             </p>
 
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
-              {/* Table header */}
-              <div className="grid grid-cols-[160px_110px_1fr_140px] bg-slate-50 border-b border-slate-200">
-                <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Plan</div>
-                <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  {hasAnyAnnual && annual ? 'Per month' : 'Monthly'}
-                </div>
-                <div className="px-5 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Includes</div>
-                <div className="px-5 py-3" />
+            <div className={tableHeaderCls}>
+              <div className="grid grid-cols-[140px_1fr_160px]">
+                <div className={colHeader}>Plan</div>
+                <div className={colHeader}>Includes</div>
+                <div className={colHeader} />
               </div>
 
-              {/* Rows — when annual toggle is on, only show plans that have an annual price in Stripe (Free always shown) */}
-              {STATIC_PLANS.filter((plan) => {
-                if (!annual) return true
-                if (plan.id === 'free') return true
-                return !!priceData[plan.id]?.annual
-              }).map((plan) => {
-                const isCurrent = currentPlan === plan.id
-                const isLoading = loadingPlan === plan.id
-                const prices = getDisplayPrice(plan.id, plan.staticMonthly)
-                // If annual toggle is on but this plan has no annual price, fall back to monthly
-                const activePrice = (annual && prices.annual) ? prices.annual : prices.monthly
-                const showingAnnual = annual && !!prices.annual
-
-                return (
-                  <div
-                    key={plan.id}
-                    className={`grid grid-cols-[160px_110px_1fr_140px] items-start border-b border-slate-100 last:border-0 transition-colors duration-150 ${
-                      plan.popular ? 'bg-blue-50/60' : 'bg-white hover:bg-slate-50/60'
-                    }`}
+              <div className="grid grid-cols-[140px_1fr_160px] items-start bg-white">
+                <div className={cell}>
+                  <span className="font-bold text-navy">Free</span>
+                  <p className="text-sm font-semibold text-slate-700 mt-0.5">No charge</p>
+                </div>
+                <div className={cell}>
+                  <ul className="space-y-1.5">
+                    {PLAN_INCLUDES.free.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
+                        <span className="text-blue-accent font-bold mt-px select-none">✓</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={`${cell} flex items-start pt-5`}>
+                  <button
+                    onClick={() => handleSelectPlan('free')}
+                    disabled={isCurrent('free', 'month')}
+                    className="w-full text-sm font-semibold px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-700 text-white transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
-                    {/* Plan name */}
-                    <div className="px-5 py-5">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-navy text-sm">{plan.name}</span>
-                        {plan.popular && (
-                          <span className="text-[10px] font-bold bg-blue-accent text-white px-2 py-0.5 rounded-full uppercase tracking-wide">
-                            Popular
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    {isCurrent('free', 'month') ? 'Current plan' : 'Get Started'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
 
-                    {/* Price */}
-                    <div className="px-5 py-5">
-                      {pricesLoading && plan.id !== 'free' ? (
-                        <PriceSkeleton />
-                      ) : (
-                        <div>
-                          <span className={`text-sm font-semibold ${plan.popular ? 'text-blue-accent' : 'text-navy'}`}>
-                            {activePrice}
-                          </span>
-                          {showingAnnual && plan.id !== 'free' && (() => {
-                            const total = priceData[plan.id]?.annual?.total
-                            return total != null ? (
-                              <p className="text-[11px] text-slate-400 mt-0.5">billed ${total}/yr</p>
-                            ) : null
-                          })()}
-                        </div>
-                      )}
-                    </div>
+          {/* ── PRO ─────────────────────────────────────────────────────────────── */}
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold text-navy mb-2">Pro Plan</h2>
+            <p className="text-slate-600 text-sm mb-6 leading-relaxed max-w-2xl">
+              50 auto-applications/day with AI resume tailoring and cover letters. Best for active job seekers.
+            </p>
 
-                    {/* Includes */}
-                    <div className="px-5 py-5">
-                      <span className="text-sm text-slate-600 leading-relaxed">{plan.includes}</span>
-                    </div>
+            <div className={tableHeaderCls}>
+              <div className="grid grid-cols-[140px_100px_1fr_160px]">
+                <div className={colHeader}>Plan</div>
+                <div className={colHeader}>Price</div>
+                <div className={colHeader}>Includes</div>
+                <div className={colHeader} />
+              </div>
 
-                    {/* CTA */}
-                    <div className="px-5 py-4">
-                      <button
-                        onClick={() => handleSelectPlan(plan.id)}
-                        disabled={isCurrent || isLoading}
-                        className={`w-full text-xs font-semibold px-4 py-2.5 rounded-lg transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none ${
-                          plan.popular
-                            ? 'bg-blue-accent hover:bg-blue-500 text-white shadow-sm hover:shadow-md'
-                            : 'bg-navy hover:bg-slate-800 text-white'
-                        }`}
-                      >
-                        {isLoading ? (
-                          <span className="inline-flex items-center justify-center gap-1.5">
-                            <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            …
-                          </span>
-                        ) : isCurrent ? 'Current' : plan.cta}
-                      </button>
-                    </div>
+              <div className="grid grid-cols-[140px_100px_1fr_160px] items-start bg-blue-50/40">
+                <div className={cell}>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-navy">Pro</span>
+                    <span className="text-[10px] font-bold bg-blue-accent text-white px-2 py-0.5 rounded-full uppercase tracking-wide">Popular</span>
                   </div>
-                )
-              })}
+                  <p className="text-xs text-slate-500 mt-0.5">Monthly</p>
+                </div>
+                <div className={cell}>
+                  {pricesLoading ? (
+                    <PriceSkeleton />
+                  ) : (
+                    <span className="text-base font-bold text-blue-accent">
+                      {priceData.pro?.monthly ? `$${priceData.pro.monthly.price}/mo` : '$9.99/mo'}
+                    </span>
+                  )}
+                </div>
+                <div className={cell}>
+                  <ul className="space-y-1.5">
+                    {PLAN_INCLUDES.pro.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
+                        <span className="text-blue-accent font-bold mt-px select-none">✓</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={`${cell} flex items-start pt-5`}>
+                  <button
+                    onClick={() => handleSelectPlan('pro', priceData.pro?.monthly?.priceId)}
+                    disabled={isCurrent('pro', 'month') || loadingPlan === priceData.pro?.monthly?.priceId}
+                    className="w-full text-sm font-semibold px-4 py-2.5 rounded-lg bg-blue-accent hover:bg-blue-500 text-white shadow-sm hover:shadow-md transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    {loadingPlan === priceData.pro?.monthly?.priceId ? (
+                      <span className="inline-flex items-center justify-center gap-1.5">
+                        <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        …
+                      </span>
+                    ) : isCurrent('pro', 'month') ? 'Current plan' : 'Start Pro'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ── BUSINESS ────────────────────────────────────────────────────────── */}
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold text-navy mb-2">Business Plan</h2>
+            <p className="text-slate-600 text-sm mb-6 leading-relaxed max-w-2xl">
+              200 auto-applications/day, hiring manager outreach, and A/B testing. For power users and recruiters.
+            </p>
+
+            <div className={tableHeaderCls}>
+              <div className="grid grid-cols-[140px_130px_1fr_160px]">
+                <div className={colHeader}>Plan</div>
+                <div className={colHeader}>Price</div>
+                <div className={colHeader}>Includes</div>
+                <div className={colHeader} />
+              </div>
+
+              {/* Monthly row */}
+              <div className="grid grid-cols-[140px_130px_1fr_160px] items-start bg-white border-b border-slate-100">
+                <div className={cell}>
+                  <span className="font-bold text-navy">Business</span>
+                  <p className="text-xs text-slate-500 mt-0.5">Monthly</p>
+                </div>
+                <div className={cell}>
+                  {pricesLoading ? (
+                    <PriceSkeleton />
+                  ) : (
+                    <span className="text-base font-bold text-navy">
+                      {priceData.business?.monthly ? `$${priceData.business.monthly.price}/mo` : '$25/mo'}
+                    </span>
+                  )}
+                </div>
+                <div className={cell}>
+                  <ul className="space-y-1.5">
+                    {PLAN_INCLUDES.business.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
+                        <span className="text-blue-accent font-bold mt-px select-none">✓</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={`${cell} flex items-start pt-5`}>
+                  <button
+                    onClick={() => handleSelectPlan('business', priceData.business?.monthly?.priceId)}
+                    disabled={isCurrent('business', 'month') || loadingPlan === priceData.business?.monthly?.priceId}
+                    className="w-full text-sm font-semibold px-4 py-2.5 rounded-lg bg-navy hover:bg-slate-700 text-white transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  >
+                    {loadingPlan === priceData.business?.monthly?.priceId ? (
+                      <span className="inline-flex items-center justify-center gap-1.5">
+                        <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        …
+                      </span>
+                    ) : isCurrent('business', 'month') ? 'Current plan' : 'Start Business'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Annual row — only rendered if Stripe returns an annual price for business */}
+              {!pricesLoading && priceData.business?.annual && (
+                <div className="grid grid-cols-[140px_130px_1fr_160px] items-start bg-emerald-50/40">
+                  <div className={cell}>
+                    <span className="font-bold text-navy">Business</span>
+                    <p className="text-xs text-slate-500 mt-0.5">Annual</p>
+                  </div>
+                  <div className={cell}>
+                    <span className="text-base font-bold text-navy">
+                      ${priceData.business.annual.perMonth}/mo
+                    </span>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      billed ${priceData.business.annual.total}/yr
+                    </p>
+                  </div>
+                  <div className={cell}>
+                    <span className="inline-flex items-center gap-1.5 text-sm text-emerald-700 font-semibold">
+                      <span className="text-emerald-600 font-bold select-none">✓</span>
+                      Save ~{Math.round(100 - (priceData.business.annual.perMonth / (priceData.business.monthly?.price ?? 25)) * 100)}% vs monthly
+                    </span>
+                    <p className="text-sm text-slate-600 mt-1">Everything in Business Monthly, billed once per year.</p>
+                  </div>
+                  <div className={`${cell} flex items-start pt-5`}>
+                    <button
+                      onClick={() => handleSelectPlan('business', priceData.business?.annual?.priceId)}
+                      disabled={isCurrent('business', 'year') || loadingPlan === priceData.business?.annual?.priceId}
+                      className="w-full text-sm font-semibold px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-150 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      {loadingPlan === priceData.business?.annual?.priceId ? (
+                        <span className="inline-flex items-center justify-center gap-1.5">
+                          <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                          …
+                        </span>
+                      ) : isCurrent('business', 'year') ? 'Current plan' : 'Start Annual'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {hasAnyAnnual && (
-              <p className="text-xs text-slate-400 mt-3">
-                Annual billing saves up to 34%. You can switch between monthly and annual at any time from your dashboard.
+            {priceData.business?.annual && (
+              <p className="text-xs text-slate-500 mt-2">
+                Annual billing is charged upfront for the full year. You can switch between monthly and annual from your dashboard.
               </p>
             )}
           </section>
 
-          {/* ── Section: Included in every paid plan ─────────────── */}
+          {/* ── Included in every paid plan ─────────────────────────────────────── */}
           <section className="mb-16">
             <h2 className="text-2xl font-bold text-navy mb-2">Included in every paid plan</h2>
-            <p className="text-slate-500 text-sm mb-8">
+            <p className="text-slate-600 text-sm mb-6">
               These come with Pro and Business at no extra charge.
             </p>
 
             <div className="border border-slate-200 rounded-xl overflow-hidden">
-              {WHATS_INCLUDED.map((item, i) => (
+              {INCLUDED_IN_ALL_PAID.map((item, i) => (
                 <div
                   key={item}
                   className={`flex items-start gap-3 px-5 py-4 border-b border-slate-100 last:border-0 ${
@@ -306,14 +364,14 @@ export default function PricingPage() {
                   }`}
                 >
                   <span className="text-blue-accent font-bold text-sm mt-px select-none">✓</span>
-                  <span className="text-sm text-slate-600">{item}</span>
+                  <span className="text-sm text-slate-700">{item}</span>
                 </div>
               ))}
             </div>
           </section>
 
-          {/* ── Billing notes ─────────────────────────────────────── */}
-          <div className="border-t border-slate-200 pt-10 text-sm text-slate-500 space-y-2 leading-relaxed">
+          {/* Billing notes */}
+          <div className="border-t border-slate-200 pt-10 text-sm text-slate-600 space-y-2 leading-relaxed">
             <p>
               Billing terms, taxes and renewals are documented in{' '}
               <Link href="#" className="text-blue-accent hover:underline">pricing &amp; billing</Link>;

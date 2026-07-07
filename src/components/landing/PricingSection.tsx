@@ -1,8 +1,9 @@
 'use client'
 
+import { motion } from 'framer-motion'
+
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { CheckIcon } from '@heroicons/react/24/solid'
 import { api } from '@/lib/api'
 
@@ -76,40 +77,11 @@ export const PLANS = [
   },
 ]
 
-const COMPARISON_ROWS = [
-  { label: 'Auto-applications per day', free: '5', pro: '50', business: '200' },
-  { label: 'Resume profiles', free: '1', pro: '5', business: 'Unlimited' },
-  { label: 'Works on all ATS systems', free: true, pro: true, business: true },
-  { label: 'AI resume tailoring', free: false, pro: true, business: true },
-  { label: 'AI cover letter generator', free: false, pro: true, business: true },
-  { label: 'Full analytics dashboard', free: false, pro: true, business: true },
-  { label: 'A/B testing for job titles', free: false, pro: false, business: true },
-  { label: 'Hiring manager email outreach', free: false, pro: false, business: true },
-  { label: 'API access', free: false, pro: false, business: true },
-  { label: 'Support', free: '—', pro: 'Email', business: 'Priority' },
-]
-
-type CellValue = boolean | string
-
-function CellVal({ value, isHighlighted }: { value: CellValue; isHighlighted?: boolean }) {
-  if (value === true)
-    return <CheckIcon className={`w-5 h-5 mx-auto ${isHighlighted ? 'text-blue-accent' : 'text-blue-accent'}`} />
-  if (value === false)
-    return <span className="text-slate-300 text-base mx-auto block text-center">—</span>
-  return (
-    <span className="text-sm font-medium text-slate-700">{value as string}</span>
-  )
-}
-
 interface PricingSectionProps {
   showHeader?: boolean
-  showComparisonTable?: boolean
 }
 
-export default function PricingSection({
-  showHeader = true,
-  showComparisonTable = true,
-}: PricingSectionProps) {
+export default function PricingSection({ showHeader = true }: PricingSectionProps) {
   const [annual, setAnnual] = useState(false)
   const [livePrices, setLivePrices] = useState<Record<string, { monthly?: number; annual?: number }>>({})
   const [pricesFetched, setPricesFetched] = useState(false)
@@ -141,18 +113,19 @@ export default function PricingSection({
   const hasAnyAnnual = pricesFetched && Object.values(livePrices).some((lp) => lp.annual != null)
 
   return (
-    <section id="pricing" className="bg-white py-20 sm:py-28">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="bg-gradient-to-b from-slate-50 via-blue-50/30 to-white py-12 sm:py-16 relative overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full bg-blue-100/40 blur-3xl" />
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {showHeader && (
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">
               Pricing
             </p>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
               Every plan, real numbers.
             </h2>
-            <p className="text-slate-500 max-w-xl mx-auto">
+            <p className="text-slate-600 max-w-xl mx-auto">
               No &quot;contact us&quot; for paid plans. 30-day money-back guarantee on all paid plans.
             </p>
           </div>
@@ -160,7 +133,7 @@ export default function PricingSection({
 
         {/* Billing toggle — only rendered if Stripe has at least one annual price */}
         {hasAnyAnnual && (
-          <div className="flex items-center justify-center gap-4 mb-12">
+          <div className="flex items-center justify-center gap-4 mb-8">
             <span className={`text-sm font-medium ${!annual ? 'text-navy' : 'text-slate-400'}`}>Monthly</span>
             <button
               onClick={() => setAnnual(!annual)}
@@ -178,7 +151,7 @@ export default function PricingSection({
         )}
 
         {/* Plan cards — when annual is on, only show plans that have an annual price (Free always shown) */}
-        <div className="grid md:grid-cols-3 gap-6 items-start mb-16">
+        <div className="grid md:grid-cols-3 gap-6 items-start mb-10">
           {PLANS.filter((plan) => {
             if (!annual) return true
             if (plan.id === 'free') return true
@@ -193,10 +166,10 @@ export default function PricingSection({
             return (
               <motion.div
                 key={plan.id}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.45, ease: 'easeOut' }}
+                viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                transition={{ delay: i * 0.1, duration: 0.4, ease: 'easeOut' }}
                 className={`relative rounded-2xl border flex flex-col overflow-hidden transition-all duration-200 ${
                   plan.highlighted
                     ? 'border-blue-accent shadow-2xl shadow-blue-100 bg-navy ring-2 ring-blue-accent hover:-translate-y-1'
@@ -215,7 +188,7 @@ export default function PricingSection({
                   <h3 className={`text-lg font-bold mb-1 ${plan.highlighted ? 'text-white' : 'text-navy'}`}>
                     {plan.name}
                   </h3>
-                  <p className={`text-sm mb-6 ${plan.highlighted ? 'text-blue-200' : 'text-slate-500'}`}>
+                  <p className={`text-sm mb-6 ${plan.highlighted ? 'text-blue-200' : 'text-slate-600'}`}>
                     {plan.description}
                   </p>
 
@@ -274,54 +247,12 @@ export default function PricingSection({
           })}
         </div>
 
-        {/* Comparison table */}
-        {showComparisonTable && (
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-          >
-            <h3 className="text-center text-xl font-bold text-navy mb-8">Full feature breakdown</h3>
-
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50">
-                    <th className="text-left py-4 px-6 text-slate-500 font-medium w-2/5">Feature</th>
-                    <th className="text-center py-4 px-6 text-navy font-semibold">Free</th>
-                    <th className="text-center py-4 px-6 font-bold bg-blue-accent/5">
-                      <span className="text-blue-accent">Pro</span>
-                    </th>
-                    <th className="text-center py-4 px-6 text-navy font-semibold">Business</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMPARISON_ROWS.map((row, i) => (
-                    <tr
-                      key={row.label}
-                      className={`border-b border-slate-100 last:border-0 hover:bg-blue-50/40 transition-colors duration-100 cursor-default ${
-                        i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'
-                      }`}
-                    >
-                      <td className="py-3.5 px-6 text-slate-600 font-medium">{row.label}</td>
-                      <td className="py-3.5 px-6 text-center"><CellVal value={row.free} /></td>
-                      <td className="py-3.5 px-6 text-center bg-blue-accent/5"><CellVal value={row.pro} isHighlighted /></td>
-                      <td className="py-3.5 px-6 text-center"><CellVal value={row.business} /></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <p className="text-center text-sm text-slate-400 mt-6">
-              All paid plans come with a 30-day money-back guarantee. Questions?{' '}
-              <a href="mailto:hello@jobblitz.ai" className="text-blue-accent hover:underline transition-colors">
-                Email us
-              </a>
-            </p>
-          </motion.div>
-        )}
+        <p className="text-center text-sm text-slate-500 mt-4">
+          All paid plans come with a 30-day money-back guarantee.{' '}
+          <a href="/pricing" className="text-blue-accent hover:underline font-medium transition-colors">
+            See full plan details →
+          </a>
+        </p>
       </div>
     </section>
   )

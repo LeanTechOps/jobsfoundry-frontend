@@ -3,6 +3,7 @@ import Footer from '@/components/layout/Footer'
 import Hero from '@/components/landing/Hero'
 import HowItWorks from '@/components/landing/HowItWorks'
 import Features from '@/components/landing/Features'
+import FeaturesShowcase from '@/components/landing/FeaturesShowcase'
 import Stats from '@/components/landing/Stats'
 import Testimonials from '@/components/landing/Testimonials'
 import Comparison from '@/components/landing/Comparison'
@@ -17,6 +18,7 @@ export default function LandingPage() {
       <main className="pt-16">
         <Hero />
         <HowItWorks />
+        <FeaturesShowcase />
         <Features />
         <Stats />
         <Comparison />
@@ -25,7 +27,7 @@ export default function LandingPage() {
         <FAQ />
 
         {/* CTA Banner */}
-        <section className="relative overflow-hidden bg-navy py-24 sm:py-32">
+        <section className="relative overflow-hidden bg-navy py-14 sm:py-20">
           {/* Decorative blobs */}
           <div
             aria-hidden

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 
+
 const STATS = [
   {
     value: '78%',
@@ -27,11 +28,11 @@ const STATS = [
 
 export default function Stats() {
   return (
-    <section className="bg-navy py-20 sm:py-24">
+    <section className="bg-navy py-12 sm:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-8">
           <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">
             Undeniable proof
           </p>
@@ -48,10 +49,10 @@ export default function Stats() {
           {STATS.map((stat, i) => (
             <motion.div
               key={stat.value}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.45, ease: 'easeOut' }}
+              viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+              transition={{ delay: i * 0.1, duration: 0.4, ease: 'easeOut' }}
               className="text-center group cursor-default"
             >
               <p className="text-5xl sm:text-6xl font-extrabold text-white mb-2 leading-none transition-transform duration-200 group-hover:scale-105">
