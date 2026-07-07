@@ -34,19 +34,19 @@ export default function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:64px_64px] opacity-30"
       />
-      {/* Stronger top gradient glow */}
+      {/* Top glow — lime tinted */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-60 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-gradient-to-br from-blue-100 via-blue-50 to-transparent blur-3xl opacity-80"
+        className="pointer-events-none absolute -top-60 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-gradient-to-br from-blue-muted via-blue-muted/30 to-transparent blur-3xl opacity-70"
       />
       {/* Side accent blobs */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 -left-64 w-[400px] h-[400px] rounded-full bg-violet-100/60 blur-3xl"
+        className="pointer-events-none absolute top-1/2 -left-64 w-[400px] h-[400px] rounded-full bg-blue-muted/50 blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/3 -right-64 w-[400px] h-[400px] rounded-full bg-blue-100/50 blur-3xl"
+        className="pointer-events-none absolute top-1/3 -right-64 w-[400px] h-[400px] rounded-full bg-blue-muted/40 blur-3xl"
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -57,7 +57,7 @@ export default function Hero() {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="inline-flex items-center gap-2 bg-blue-accent text-white text-xs font-bold px-4 py-1.5 rounded-full mb-8 shadow-md shadow-blue-200 select-none cursor-default"
+          className="inline-flex items-center gap-2 bg-peach text-white text-xs font-bold px-4 py-1.5 rounded-full mb-8 shadow-md select-none cursor-default"
         >
           <BoltIcon className="w-3.5 h-3.5" />
           AI-powered · Apply to 100+ jobs daily automatically
@@ -71,13 +71,13 @@ export default function Hero() {
           animate="show"
           className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-navy leading-[1.12] mb-5"
         >
-          Land Your Dream Job
+          Stop Grinding. Start
           <br />
           <span className="relative inline-block">
-            <span className="text-blue-accent">10× Faster.</span>
+            <span className="text-navy">Getting Hired.</span>
             <span
               aria-hidden
-              className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-gradient-to-r from-blue-400 via-blue-accent to-blue-400 opacity-70"
+              className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-blue-accent opacity-70"
             />
           </span>
         </motion.h1>
@@ -104,14 +104,14 @@ export default function Hero() {
         >
           <Link
             href="/login?plan=free"
-            className="group inline-flex items-center gap-2 bg-blue-accent hover:bg-blue-500 active:scale-95 text-white font-bold px-8 py-4 rounded-xl transition-all duration-150 shadow-xl shadow-blue-200 hover:shadow-2xl hover:shadow-blue-200 text-base cursor-pointer select-none"
+            className="group inline-flex items-center gap-2 bg-peach hover:bg-peach-hover active:scale-95 text-white font-bold px-8 py-4 rounded-xl transition-all duration-150 shadow-lg hover:shadow-xl text-base cursor-pointer select-none"
           >
             Get Started Free
             <ArrowRightIcon className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />
           </Link>
           <Link
             href="/pricing"
-            className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 active:scale-95 text-navy font-bold px-8 py-4 rounded-xl border-2 border-slate-200 hover:border-slate-300 transition-all duration-150 text-base cursor-pointer select-none"
+            className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 active:scale-95 text-navy font-bold px-8 py-4 rounded-xl border-2 border-slate-200 hover:border-navy/20 transition-all duration-150 text-base cursor-pointer select-none"
           >
             View Pricing
           </Link>
@@ -144,7 +144,7 @@ export default function Hero() {
           <div className="flex -space-x-2.5">
             {[
               { bg: 'bg-violet-500', l: 'A' },
-              { bg: 'bg-blue-accent', l: 'B' },
+              { bg: 'bg-navy', l: 'B' },
               { bg: 'bg-rose-500', l: 'C' },
               { bg: 'bg-emerald-600', l: 'D' },
               { bg: 'bg-amber-500', l: 'E' },
@@ -175,7 +175,7 @@ export default function Hero() {
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-blue-100 transition-all duration-200 cursor-default"
+              className="bg-white border-2 border-slate-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-blue-accent/30 transition-all duration-200 cursor-default"
             >
               <p className="text-2xl font-extrabold text-navy">{stat.value}</p>
               <p className="text-xs font-medium text-slate-600 mt-0.5">{stat.label}</p>

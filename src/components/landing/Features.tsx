@@ -16,10 +16,10 @@ const FEATURES = [
     title: 'Auto-Apply Engine',
     description:
       'Automatically apply to hundreds of matching jobs every day across 500,000+ company career pages — without you lifting a finger.',
-    iconColor: 'text-blue-accent',
+    iconColor: 'text-navy',
     iconBg: 'bg-blue-muted',
     stripe: 'bg-blue-accent',
-    borderHover: 'hover:border-blue-200 hover:shadow-blue-50',
+    borderHover: 'hover:border-blue-accent/30 hover:shadow-blue-muted',
   },
   {
     icon: DocumentTextIcon,
@@ -79,7 +79,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-10">
-          <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-3">
             Features
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
@@ -111,7 +111,7 @@ export default function Features() {
                 >
                   <feature.icon className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-bold text-navy mb-2 group-hover:text-blue-accent transition-colors duration-150">
+                <h3 className="text-base font-bold text-navy mb-2 group-hover:text-navy-light transition-colors duration-150">
                   {feature.title}
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed">{feature.description}</p>

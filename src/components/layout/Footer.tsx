@@ -26,8 +26,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block mb-4 group cursor-pointer">
               <span className="text-xl font-bold">
-                <span className="text-white group-hover:text-slate-200 transition-colors duration-150">Job</span>
-                <span className="text-blue-300 group-hover:text-blue-200 transition-colors duration-150">Blitz</span>
+                <span className="text-white group-hover:text-blue-accent transition-colors duration-150">JobBlitz</span>
               </span>
             </Link>
             <p className="text-slate-300 text-sm leading-relaxed max-w-xs">
@@ -49,7 +48,7 @@ export default function Footer() {
                       className="group relative text-sm text-slate-300 hover:text-white transition-colors duration-150 cursor-pointer inline-block"
                     >
                       {link.label}
-                      <span className="absolute inset-x-0 -bottom-0.5 h-px bg-blue-300 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                      <span className="absolute inset-x-0 -bottom-0.5 h-px bg-blue-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
                     </Link>
                   </li>
                 ))}

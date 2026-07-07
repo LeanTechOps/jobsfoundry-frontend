@@ -89,12 +89,12 @@ export default function PlanBilling() {
               key={p.id}
               className={`relative bg-white rounded-2xl border p-6 shadow-sm flex flex-col transition-all duration-200 ${
                 isCurrent
-                  ? 'border-blue-accent ring-2 ring-blue-accent/20'
+                  ? 'border-navy ring-2 ring-navy/20'
                   : 'border-slate-200 hover:border-slate-300 hover:shadow-md'
               }`}
             >
               {isCurrent && (
-                <span className="absolute top-4 right-4 text-[10px] font-bold bg-blue-accent text-white px-2 py-0.5 rounded-full uppercase tracking-wide">
+                <span className="absolute top-4 right-4 text-[10px] font-bold bg-blue-accent text-navy px-2 py-0.5 rounded-full uppercase tracking-wide">
                   Current
                 </span>
               )}
@@ -112,14 +112,14 @@ export default function PlanBilling() {
               <ul className="space-y-2 flex-1 mb-6">
                 {p.features.slice(0, 5).map((feat) => (
                   <li key={feat} className="flex items-start gap-2">
-                    <CheckIcon className="w-4 h-4 text-blue-accent flex-shrink-0 mt-0.5" />
+                    <CheckIcon className="w-4 h-4 text-navy flex-shrink-0 mt-0.5" />
                     <span className="text-xs text-slate-600 leading-snug">{feat}</span>
                   </li>
                 ))}
               </ul>
 
               {isCurrent ? (
-                <div className="w-full text-center text-xs font-semibold text-blue-accent bg-blue-muted py-2.5 rounded-lg select-none">
+                <div className="w-full text-center text-xs font-semibold text-navy bg-blue-muted py-2.5 rounded-lg select-none">
                   Your current plan
                 </div>
               ) : (
@@ -130,7 +130,7 @@ export default function PlanBilling() {
                     isFree
                       ? 'bg-slate-100 text-slate-500 cursor-not-allowed'
                       : plan === 'FREE' || (plan === 'PRO' && p.id === 'business')
-                      ? 'bg-blue-accent hover:bg-blue-500 text-white hover:shadow-md'
+                      ? 'bg-blue-accent hover:bg-blue-accent-hover text-navy font-bold hover:shadow-md'
                       : 'bg-slate-900 hover:bg-slate-700 text-white hover:shadow-md'
                   }`}
                 >

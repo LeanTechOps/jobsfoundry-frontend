@@ -24,7 +24,6 @@ export const PLANS = [
     highlighted: false,
     cta: 'Get Started Free',
     ctaHref: '/login?plan=free',
-    // Only list what's included — no X marks (drivetube style)
     features: [
       '5 auto-applications per day',
       '1 resume profile',
@@ -109,17 +108,16 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
     fetchPrices()
   }, [])
 
-  // Only show annual toggle once API responds and confirms annual prices exist
   const hasAnyAnnual = pricesFetched && Object.values(livePrices).some((lp) => lp.annual != null)
 
   return (
-    <section id="pricing" className="bg-gradient-to-b from-slate-50 via-blue-50/30 to-white py-12 sm:py-16 relative overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full bg-blue-100/40 blur-3xl" />
+    <section id="pricing" className="bg-gradient-to-b from-section-alt via-blue-muted/20 to-white py-12 sm:py-16 relative overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full bg-blue-muted/40 blur-3xl" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {showHeader && (
           <div className="text-center mb-8">
-            <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">
+            <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-3">
               Pricing
             </p>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
@@ -131,13 +129,13 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
           </div>
         )}
 
-        {/* Billing toggle — only rendered if Stripe has at least one annual price */}
+        {/* Billing toggle */}
         {hasAnyAnnual && (
           <div className="flex items-center justify-center gap-4 mb-8">
             <span className={`text-sm font-medium ${!annual ? 'text-navy' : 'text-slate-400'}`}>Monthly</span>
             <button
               onClick={() => setAnnual(!annual)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-blue-accent focus-visible:ring-offset-2 cursor-pointer ${annual ? 'bg-blue-accent' : 'bg-slate-200'}`}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2 cursor-pointer ${annual ? 'bg-navy' : 'bg-slate-200'}`}
             >
               <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${annual ? 'translate-x-6' : 'translate-x-1'}`} />
             </button>
@@ -150,7 +148,7 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
           </div>
         )}
 
-        {/* Plan cards — when annual is on, only show plans that have an annual price (Free always shown) */}
+        {/* Plan cards */}
         <div className="grid md:grid-cols-3 gap-6 items-start mb-10">
           {PLANS.filter((plan) => {
             if (!annual) return true
@@ -172,13 +170,13 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
                 transition={{ delay: i * 0.1, duration: 0.4, ease: 'easeOut' }}
                 className={`relative rounded-2xl border flex flex-col overflow-hidden transition-all duration-200 ${
                   plan.highlighted
-                    ? 'border-blue-accent shadow-2xl shadow-blue-100 bg-navy ring-2 ring-blue-accent hover:-translate-y-1'
+                    ? 'border-navy shadow-2xl bg-navy ring-2 ring-blue-accent hover:-translate-y-1'
                     : 'border-slate-200 shadow-sm bg-white hover:-translate-y-1 hover:shadow-lg hover:border-slate-300'
                 }`}
               >
                 {plan.badge && (
                   <div className={`text-center text-xs font-bold py-2 tracking-wide ${
-                    plan.highlighted ? 'bg-blue-accent text-white' : 'bg-slate-50 text-blue-accent border-b border-slate-100'
+                    plan.highlighted ? 'bg-peach text-white' : 'bg-slate-50 text-navy border-b border-slate-100'
                   }`}>
                     {plan.badge}
                   </div>
@@ -188,7 +186,7 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
                   <h3 className={`text-lg font-bold mb-1 ${plan.highlighted ? 'text-white' : 'text-navy'}`}>
                     {plan.name}
                   </h3>
-                  <p className={`text-sm mb-6 ${plan.highlighted ? 'text-blue-200' : 'text-slate-600'}`}>
+                  <p className={`text-sm mb-6 ${plan.highlighted ? 'text-white/70' : 'text-slate-600'}`}>
                     {plan.description}
                   </p>
 
@@ -199,18 +197,18 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
                         {price === 0 ? 'Free' : `$${price}`}
                       </span>
                       {price > 0 && (
-                        <span className={`text-sm mb-1 ${plan.highlighted ? 'text-blue-200' : 'text-slate-400'}`}>
+                        <span className={`text-sm mb-1 ${plan.highlighted ? 'text-white/50' : 'text-slate-400'}`}>
                           /mo
                         </span>
                       )}
                     </div>
                     {annual && hasAnnual && monthlyPrice > 0 && (
-                      <p className={`text-xs mt-1 ${plan.highlighted ? 'text-blue-300' : 'text-slate-400'}`}>
+                      <p className={`text-xs mt-1 ${plan.highlighted ? 'text-white/50' : 'text-slate-400'}`}>
                         Billed ${Math.round(annualPrice! * 12)}/yr · Save ${Math.round((monthlyPrice - annualPrice!) * 12)}/yr
                       </p>
                     )}
                     {plan.monthlyPrice === 0 && (
-                      <p className={`text-xs mt-1 ${plan.highlighted ? 'text-blue-300' : 'text-slate-400'}`}>
+                      <p className={`text-xs mt-1 ${plan.highlighted ? 'text-white/50' : 'text-slate-400'}`}>
                         No credit card required
                       </p>
                     )}
@@ -219,23 +217,23 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
                   {/* CTA */}
                   <Link
                     href={plan.ctaHref}
-                    className={`w-full text-center font-semibold py-3 rounded-lg mt-6 mb-8 transition-all duration-150 text-sm active:scale-[0.98] cursor-pointer select-none ${
+                    className={`w-full text-center font-bold py-3 rounded-lg mt-6 mb-8 transition-all duration-150 text-sm active:scale-[0.98] cursor-pointer select-none ${
                       plan.highlighted
-                        ? 'bg-white text-navy hover:bg-slate-50 hover:shadow-md'
+                        ? 'bg-peach text-white hover:bg-peach-hover hover:shadow-md'
                         : plan.id === 'free'
-                        ? 'bg-slate-900 hover:bg-slate-700 text-white hover:shadow-md'
-                        : 'bg-blue-accent hover:bg-blue-500 text-white hover:shadow-lg hover:shadow-blue-100'
+                        ? 'bg-navy hover:bg-navy-dark text-white hover:shadow-md'
+                        : 'bg-peach hover:bg-peach-hover text-white hover:shadow-lg'
                     }`}
                   >
                     {plan.cta}
                   </Link>
 
-                  {/* Features — only included, no X marks (drivetube style) */}
+                  {/* Features */}
                   <ul className="space-y-3 flex-1">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-3">
-                        <CheckIcon className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.highlighted ? 'text-blue-300' : 'text-blue-accent'}`} />
-                        <span className={`text-sm ${plan.highlighted ? 'text-blue-100' : 'text-slate-600'}`}>
+                        <CheckIcon className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.highlighted ? 'text-blue-accent' : 'text-navy'}`} />
+                        <span className={`text-sm ${plan.highlighted ? 'text-white/80' : 'text-slate-600'}`}>
                           {feature}
                         </span>
                       </li>
@@ -249,7 +247,7 @@ export default function PricingSection({ showHeader = true }: PricingSectionProp
 
         <p className="text-center text-sm text-slate-500 mt-4">
           All paid plans come with a 30-day money-back guarantee.{' '}
-          <a href="/pricing" className="text-blue-accent hover:underline font-medium transition-colors">
+          <a href="/pricing" className="text-navy font-semibold hover:underline transition-colors">
             See full plan details →
           </a>
         </p>

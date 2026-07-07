@@ -35,22 +35,22 @@ export default function LandingPage() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-blue-400/10 blur-3xl"
+            className="pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-blue-accent/5 blur-3xl"
           />
 
           <div className="relative max-w-3xl mx-auto px-4 text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6 cursor-default select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-300 animate-pulse" />
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/70 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-6 cursor-default select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-accent animate-pulse" />
               Free forever · No credit card needed
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-5 leading-tight">
               Ready to Blitz your
               <br />
-              <span className="text-blue-300">job search?</span>
+              <span className="text-blue-accent">job search?</span>
             </h2>
-            <p className="text-blue-200 mb-10 text-lg max-w-xl mx-auto leading-relaxed">
+            <p className="text-white/70 mb-10 text-lg max-w-xl mx-auto leading-relaxed">
               Join 50,000+ job seekers who automated their applications with AI.
               Start free — upgrade when you&apos;re ready.
             </p>
@@ -72,7 +72,7 @@ export default function LandingPage() {
             </div>
 
             {/* Social proof line */}
-            <p className="text-blue-300/70 text-xs mt-8">
+            <p className="text-white/40 text-xs mt-8">
               Trusted by engineers, designers, PMs and analysts at 10,000+ companies
             </p>
           </div>

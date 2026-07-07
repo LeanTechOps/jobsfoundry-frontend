@@ -59,7 +59,7 @@ function LoginPageInner() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="w-6 h-6 border-2 border-blue-accent border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-navy border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -71,29 +71,26 @@ function LoginPageInner() {
         {/* Logo */}
         <Link href="/" className="group cursor-pointer">
           <span className="text-xl font-bold text-white">
-            Job
-            <span className="text-blue-300 group-hover:text-blue-200 transition-colors duration-150">
-              Blitz
-            </span>
+            Job<span className="text-blue-accent">Blitz</span>
           </span>
         </Link>
 
         {/* Middle */}
         <div>
-          <p className="text-xs font-semibold text-blue-300 uppercase tracking-widest mb-4">
+          <p className="text-xs font-semibold text-blue-accent uppercase tracking-widest mb-4">
             Why job seekers choose us
           </p>
           <h2 className="text-3xl font-extrabold text-white mb-8 leading-snug">
             Land your dream job
             <br />
-            <span className="text-blue-300">10× faster with AI</span>
+            <span className="text-blue-accent">10× faster with AI</span>
           </h2>
 
           <ul className="space-y-4 mb-10">
             {VALUE_PROPS.map((prop) => (
               <li key={prop} className="flex items-start gap-3 group cursor-default">
-                <CheckCircleIcon className="w-5 h-5 text-blue-300 flex-shrink-0 mt-0.5 transition-transform duration-150 group-hover:scale-110" />
-                <span className="text-blue-100 text-sm group-hover:text-white transition-colors duration-150">
+                <CheckCircleIcon className="w-5 h-5 text-blue-accent flex-shrink-0 mt-0.5 transition-transform duration-150 group-hover:scale-110" />
+                <span className="text-white/80 text-sm group-hover:text-white transition-colors duration-150">
                   {prop}
                 </span>
               </li>
@@ -105,28 +102,28 @@ function LoginPageInner() {
             {STATS.map((s) => (
               <div
                 key={s.label}
-                className="bg-white/10 hover:bg-white/15 rounded-xl p-4 text-center transition-all duration-200 cursor-default hover:-translate-y-0.5"
+                className="bg-white/10 hover:bg-white/15 rounded-xl p-4 text-center transition-all duration-200 cursor-default"
               >
                 <p className="text-2xl font-extrabold text-white">{s.value}</p>
-                <p className="text-xs text-blue-200 mt-0.5">{s.label}</p>
+                <p className="text-xs text-white/60 mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Testimonial */}
-        <blockquote className="border-l-2 border-blue-400 pl-5">
-          <p className="text-blue-100 text-sm italic leading-relaxed">
+        <blockquote className="border-l-2 border-blue-accent/60 pl-5">
+          <p className="text-white/80 text-sm italic leading-relaxed">
             &ldquo;I went from zero callbacks to 8 interviews in two weeks.
             JobBlitz completely changed my job search.&rdquo;
           </p>
           <footer className="mt-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-blue-400/30 text-white text-xs font-bold flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-blue-accent/20 text-white text-xs font-bold flex items-center justify-center">
               PS
             </div>
             <div>
               <p className="text-white text-xs font-semibold">Priya S.</p>
-              <p className="text-blue-300 text-xs">Software Engineer · Joined Stripe</p>
+              <p className="text-blue-accent text-xs">Software Engineer · Joined Stripe</p>
             </div>
           </footer>
         </blockquote>
@@ -139,8 +136,8 @@ function LoginPageInner() {
         <div className="lg:hidden mb-10">
           <Link href="/" className="group cursor-pointer">
             <span className="text-2xl font-bold">
-              <span className="text-navy group-hover:text-slate-700 transition-colors duration-150">Job</span>
-              <span className="text-blue-accent group-hover:text-blue-500 transition-colors duration-150">Blitz</span>
+              <span className="text-navy">Job</span>
+              <span className="text-navy">Blitz</span>
             </span>
           </Link>
         </div>
@@ -150,7 +147,7 @@ function LoginPageInner() {
           {/* Heading */}
           <div className="mb-8 text-center">
             {planCtx && (
-              <span className="inline-block mb-3 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-blue-muted text-blue-accent border border-blue-accent/20">
+              <span className="inline-block mb-3 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-blue-muted text-navy border border-navy/20">
                 {planCtx.badge}
               </span>
             )}
@@ -173,7 +170,7 @@ function LoginPageInner() {
           {/* Google button */}
           <button
             onClick={handleGoogleLogin}
-            className="group w-full flex items-center justify-center gap-3 border border-slate-200 hover:border-blue-accent/40 hover:bg-blue-50/50 active:scale-[0.98] rounded-xl py-4 px-5 text-sm font-semibold text-slate-700 hover:text-slate-900 transition-all duration-150 shadow-sm hover:shadow-md cursor-pointer select-none"
+            className="group w-full flex items-center justify-center gap-3 border border-slate-200 hover:border-navy/30 hover:bg-blue-muted/50 active:scale-[0.98] rounded-xl py-4 px-5 text-sm font-semibold text-slate-700 hover:text-navy transition-all duration-150 shadow-sm hover:shadow-md cursor-pointer select-none"
           >
             <span className="transition-transform duration-150 group-hover:scale-110">
               <GoogleIcon />
@@ -186,14 +183,14 @@ function LoginPageInner() {
             By continuing, you agree to our{' '}
             <Link
               href="/terms"
-              className="text-blue-accent font-medium hover:text-blue-500 hover:underline transition-colors duration-150 cursor-pointer"
+              className="text-navy font-semibold hover:text-navy-light hover:underline transition-colors duration-150 cursor-pointer"
             >
               Terms of Service
             </Link>
             {' '}and{' '}
             <Link
               href="/privacy"
-              className="text-blue-accent font-medium hover:text-blue-500 hover:underline transition-colors duration-150 cursor-pointer"
+              className="text-navy font-semibold hover:text-navy-light hover:underline transition-colors duration-150 cursor-pointer"
             >
               Privacy Policy
             </Link>

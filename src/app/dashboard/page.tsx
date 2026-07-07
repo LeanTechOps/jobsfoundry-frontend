@@ -16,7 +16,7 @@ import {
 const PLAN_BADGE_COLOR: Record<string, string> = {
   FREE: 'bg-slate-100 text-slate-700',
   PRO_FREE: 'bg-amber-50 text-amber-700 border border-amber-200',
-  PRO: 'bg-blue-muted text-blue-accent',
+  PRO: 'bg-blue-muted text-navy',
   BUSINESS: 'bg-navy text-white',
 }
 
@@ -27,7 +27,7 @@ const PLAN_DISPLAY_NAME: Record<string, string> = {
 const QUICK_ACTIONS = [
   {
     icon: BoltIcon,
-    iconColor: 'text-blue-accent',
+    iconColor: 'text-navy',
     iconBg: 'bg-blue-muted',
     title: 'Start Auto-Applying',
     description: 'Set up your preferences and let AI apply for you.',
@@ -64,7 +64,7 @@ export default function DashboardPage() {
   if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-section-alt">
-        <div className="w-7 h-7 border-2 border-blue-accent border-t-transparent rounded-full animate-spin" />
+        <div className="w-7 h-7 border-2 border-navy border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -79,9 +79,8 @@ export default function DashboardPage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="group cursor-pointer">
-            <span className="text-xl font-bold">
-              <span className="text-navy group-hover:text-slate-700 transition-colors duration-150">Job</span>
-              <span className="text-blue-accent group-hover:text-blue-500 transition-colors duration-150">Blitz</span>
+            <span className="text-xl font-bold text-navy group-hover:text-navy-light transition-colors duration-150">
+              JobBlitz
             </span>
           </Link>
 
@@ -112,17 +111,17 @@ export default function DashboardPage() {
 
         {/* Welcome */}
         <div>
-          <p className="text-xs font-semibold text-blue-accent uppercase tracking-widest mb-1">Dashboard</p>
+          <p className="text-xs font-semibold text-navy uppercase tracking-widest mb-1">Dashboard</p>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-navy">
             Welcome back, {firstName} 👋
           </h1>
-          <p className="text-slate-600 text-sm mt-1">Here&apos;s your job search overview for today.</p>
+          <p className="text-slate-700 font-medium mt-1">Here&apos;s your job search overview for today.</p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'Applications Sent', value: '0', sub: 'Start auto-applying to see this', icon: BoltIcon, color: 'text-blue-accent', iconBg: 'bg-blue-muted' },
+            { label: 'Applications Sent', value: '0', sub: 'Start auto-applying to see this', icon: BoltIcon, color: 'text-navy', iconBg: 'bg-blue-muted' },
             { label: 'Active Jobs', value: '0', sub: 'Jobs being tracked', icon: ClipboardDocumentListIcon, color: 'text-emerald-600', iconBg: 'bg-emerald-50' },
             { label: 'Interview Requests', value: '0', sub: 'From applications sent', icon: ChartBarIcon, color: 'text-violet-600', iconBg: 'bg-violet-50' },
             { label: 'Response Rate', value: '—', sub: 'Available after first batch', icon: ChartBarIcon, color: 'text-amber-600', iconBg: 'bg-amber-50' },
@@ -131,47 +130,47 @@ export default function DashboardPage() {
               key={stat.label}
               className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm cursor-default"
             >
-              <div className={`inline-flex items-center justify-center w-9 h-9 rounded-lg ${stat.iconBg} ${stat.color} mb-3`}>
+              <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${stat.iconBg} ${stat.color} mb-4`}>
                 <stat.icon className="w-5 h-5" />
               </div>
-              <p className="text-2xl font-extrabold text-navy">{stat.value}</p>
-              <p className="text-sm font-semibold text-slate-700 mt-1">{stat.label}</p>
-              <p className="text-xs text-slate-500 mt-0.5 leading-tight">{stat.sub}</p>
+              <p className="text-3xl font-extrabold text-navy">{stat.value}</p>
+              <p className="text-base font-bold text-slate-800 mt-1">{stat.label}</p>
+              <p className="text-sm font-medium text-slate-600 mt-1 leading-snug">{stat.sub}</p>
             </div>
           ))}
         </div>
 
         {/* Quick Actions */}
         <div>
-          <p className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-4">Quick Actions</p>
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-4">Quick Actions</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {QUICK_ACTIONS.map((action) => {
               const inner = (
                 <>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${action.iconBg} ${action.iconColor}`}>
+                  <div className="flex items-start justify-between mb-5">
+                    <div className={`inline-flex items-center justify-center w-11 h-11 rounded-xl ${action.iconBg} ${action.iconColor}`}>
                       <action.icon className="w-5 h-5" />
                     </div>
-                    <span className={`text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${action.href ? 'bg-blue-muted text-blue-accent' : 'bg-slate-100 text-slate-500'}`}>
+                    <span className={`text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${action.href ? 'bg-blue-muted text-navy' : 'bg-slate-100 text-slate-600'}`}>
                       {action.href ? 'Set up →' : 'Coming soon'}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-navy">{action.title}</h3>
-                  <p className="text-sm text-slate-600 mt-1.5">{action.description}</p>
+                  <h3 className="text-lg font-bold text-navy">{action.title}</h3>
+                  <p className="text-sm font-medium text-slate-700 mt-2 leading-relaxed">{action.description}</p>
                 </>
               )
               return action.href ? (
                 <Link
                   key={action.title}
                   href={action.href}
-                  className="group bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-blue-accent hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 cursor-pointer select-none"
+                  className="group bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:border-navy/30 hover:shadow-md transition-all duration-150 cursor-pointer select-none"
                 >
                   {inner}
                 </Link>
               ) : (
                 <div
                   key={action.title}
-                  className="group bg-white border border-slate-200 rounded-2xl p-6 shadow-sm cursor-default select-none"
+                  className="group bg-white border border-slate-200 rounded-2xl p-6 shadow-sm cursor-default select-none opacity-80"
                 >
                   {inner}
                 </div>
@@ -182,17 +181,17 @@ export default function DashboardPage() {
 
         {/* Plan & Billing card */}
         <div>
-          <p className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-4">Plan &amp; Billing</p>
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-4">Plan &amp; Billing</p>
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-blue-muted text-blue-accent flex-shrink-0">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-muted text-navy flex-shrink-0">
                 <CreditCardIcon className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-base font-bold text-navy">
+                <p className="text-lg font-bold text-navy">
                   {PLAN_DISPLAY_NAME[plan] ?? (plan.charAt(0) + plan.slice(1).toLowerCase())} Plan
                 </p>
-                <p className="text-sm text-slate-600 mt-0.5">
+                <p className="text-sm font-medium text-slate-700 mt-0.5">
                   {plan === 'FREE'
                     ? 'Upgrade to unlock more applications and AI features.'
                     : plan === 'PRO_FREE'
@@ -203,7 +202,7 @@ export default function DashboardPage() {
             </div>
             <Link
               href="/pricing"
-              className="flex-shrink-0 inline-flex items-center gap-2 bg-navy hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-150 active:scale-95 hover:shadow-md cursor-pointer"
+              className="flex-shrink-0 inline-flex items-center gap-2 bg-peach hover:bg-peach-hover text-white text-sm font-bold px-5 py-3 rounded-xl transition-all duration-150 active:scale-95 hover:shadow-md cursor-pointer"
             >
               {plan === 'FREE' || plan === 'PRO_FREE' ? 'Upgrade Plan' : 'Manage Billing'}
               <ArrowRightIcon className="w-4 h-4" />

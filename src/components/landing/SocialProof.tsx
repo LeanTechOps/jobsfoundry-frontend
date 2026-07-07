@@ -17,8 +17,8 @@ export default function SocialProof() {
           <div className="flex-1 p-10 sm:p-14 flex flex-col justify-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 mb-6 w-fit">
-              <span className="w-2 h-2 rounded-full bg-blue-accent animate-pulse" />
-              <span className="text-xs font-bold text-blue-accent tracking-widest uppercase">
+              <span className="w-2 h-2 rounded-full bg-navy animate-pulse" />
+              <span className="text-xs font-bold text-navy tracking-widest uppercase">
                 Helping 50,000+ job seekers get hired
               </span>
             </div>
@@ -26,16 +26,15 @@ export default function SocialProof() {
             {/* Quote */}
             <blockquote className="text-2xl sm:text-3xl font-semibold text-navy leading-snug mb-8">
               &ldquo;You should{' '}
-              <span className="text-blue-accent">focus on what matters</span>{' '}
+              <span className="bg-blue-accent/20 px-1 rounded">focus on what matters</span>{' '}
               — interview prep and networking.{' '}
-              <span className="text-blue-accent">Let JobBlitz handle the rest</span>.&rdquo;
+              <span className="bg-blue-accent/20 px-1 rounded">Let JobBlitz handle the rest</span>.&rdquo;
             </blockquote>
 
             {/* Author */}
             <div className="flex items-center gap-4">
-              {/* Circle avatar */}
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-accent to-violet-500 flex items-center justify-center flex-shrink-0 shadow-md">
-                <span className="text-sm font-black text-white select-none">JB</span>
+              <div className="w-12 h-12 rounded-full bg-navy flex items-center justify-center flex-shrink-0 shadow-md">
+                <span className="text-sm font-black text-blue-accent select-none">JB</span>
               </div>
               <div>
                 <p className="text-sm font-bold text-navy">The JobBlitz Team</p>

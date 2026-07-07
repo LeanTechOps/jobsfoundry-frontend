@@ -39,7 +39,7 @@ export default function Stats() {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
             Numbers that speak for themselves
           </h2>
-          <p className="text-blue-200 max-w-xl mx-auto">
+          <p className="text-white/60 max-w-xl mx-auto">
             We don&apos;t make vague promises. Here&apos;s what our users actually experience.
           </p>
         </div>
@@ -58,8 +58,8 @@ export default function Stats() {
               <p className="text-5xl sm:text-6xl font-extrabold text-white mb-2 leading-none transition-transform duration-200 group-hover:scale-105">
                 {stat.value}
               </p>
-              <p className="text-blue-accent font-semibold text-base mb-2 group-hover:text-blue-300 transition-colors duration-150">{stat.label}</p>
-              <p className="text-blue-200/70 text-sm leading-relaxed">{stat.context}</p>
+              <p className="text-blue-accent font-semibold text-base mb-2">{stat.label}</p>
+              <p className="text-white/50 text-sm leading-relaxed">{stat.context}</p>
             </motion.div>
           ))}
         </div>

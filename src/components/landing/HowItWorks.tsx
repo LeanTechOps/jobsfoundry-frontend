@@ -11,10 +11,10 @@ const STEPS = [
     title: 'Create Your Profile',
     description:
       'Upload your resume, fill in your skills and experience once. JobBlitz uses this to personalise every application on your behalf.',
-    num: 'bg-blue-accent text-white border-blue-accent',
-    card: 'hover:border-blue-300 hover:shadow-blue-100',
-    iconColor: 'text-blue-accent',
-    glow: 'hover:shadow-blue-100',
+    num: 'bg-blue-accent text-navy border-blue-accent',
+    card: 'hover:border-blue-accent/30 hover:shadow-blue-muted',
+    iconColor: 'text-navy',
+    glow: 'hover:shadow-blue-muted',
   },
   {
     step: '02',
@@ -42,15 +42,15 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative bg-gradient-to-b from-blue-50 via-blue-50/30 to-white py-12 sm:py-16 overflow-hidden">
+    <section id="how-it-works" className="relative bg-gradient-to-b from-blue-muted/40 via-blue-muted/20 to-white py-12 sm:py-16 overflow-hidden">
       {/* Decorative blobs */}
-      <div aria-hidden className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-blue-200/30 blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-blue-muted/50 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-violet-200/20 blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-10">
-          <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-3">
             How It Works
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
@@ -67,7 +67,7 @@ export default function HowItWorks() {
           {/* Connector line */}
           <div
             aria-hidden
-            className="hidden md:block absolute top-10 left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-0.5 bg-gradient-to-r from-blue-300 via-violet-300 to-emerald-300"
+            className="hidden md:block absolute top-10 left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-0.5 bg-gradient-to-r from-blue-accent/60 via-violet-300 to-emerald-300"
           />
           <div aria-hidden className="hidden md:block absolute top-[35px] left-[calc(33.33%-10px)] text-violet-300 text-xl select-none font-bold">›</div>
           <div aria-hidden className="hidden md:block absolute top-[35px] left-[calc(66.66%-10px)] text-emerald-300 text-xl select-none font-bold">›</div>
@@ -84,7 +84,7 @@ export default function HowItWorks() {
               {/* Colored top stripe */}
               <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-2xl ${step.num.split(' ')[0]}`} />
 
-              {/* Step number — always colored */}
+              {/* Step number */}
               <div
                 className={`inline-flex items-center justify-center w-12 h-12 rounded-full border-2 font-bold text-sm mb-6 relative z-10 ${step.num}`}
               >

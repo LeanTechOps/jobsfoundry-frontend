@@ -39,8 +39,8 @@ export default function Navbar() {
           className="flex items-center gap-1.5 flex-shrink-0 group cursor-pointer"
         >
           <span className="text-xl font-bold tracking-tight">
-            <span className="text-navy group-hover:text-slate-700 transition-colors duration-150">Job</span>
-            <span className="text-blue-accent group-hover:text-blue-500 transition-colors duration-150">Blitz</span>
+            <span className="text-navy group-hover:text-navy-light transition-colors duration-150">Job</span>
+            <span className="text-navy group-hover:text-navy-light transition-colors duration-150">Blitz</span>
           </span>
         </Link>
 
@@ -86,7 +86,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/login?plan=free"
-                className="inline-flex items-center gap-1.5 bg-blue-accent hover:bg-blue-500 active:scale-95 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-150 shadow-sm hover:shadow-md cursor-pointer select-none"
+                className="inline-flex items-center gap-1.5 bg-blue-accent hover:bg-blue-accent-hover active:scale-95 text-navy text-sm font-bold px-4 py-2 rounded-lg transition-all duration-150 shadow-sm hover:shadow-md cursor-pointer select-none"
               >
                 Get Started Free
               </Link>
@@ -150,7 +150,7 @@ export default function Navbar() {
                 <Link
                   href="/login?plan=free"
                   onClick={() => setMobileOpen(false)}
-                  className="bg-blue-accent hover:bg-blue-500 active:scale-95 text-white text-sm font-semibold px-4 py-2.5 rounded-lg text-center transition-all duration-150 cursor-pointer select-none"
+                  className="bg-blue-accent hover:bg-blue-accent-hover active:scale-95 text-navy text-sm font-bold px-4 py-2.5 rounded-lg text-center transition-all duration-150 cursor-pointer select-none"
                 >
                   Get Started Free
                 </Link>

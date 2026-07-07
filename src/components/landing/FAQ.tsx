@@ -54,12 +54,12 @@ const FAQS = [
 
 export default function FAQ() {
   return (
-    <section id="faq" className="bg-gradient-to-b from-white to-blue-50/40 py-12 sm:py-16">
+    <section id="faq" className="bg-gradient-to-b from-white to-blue-muted/30 py-12 sm:py-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">FAQ</p>
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-3">FAQ</p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
             We know you have questions
           </h2>
@@ -67,7 +67,7 @@ export default function FAQ() {
             95% of questions answered here. Can&apos;t find what you&apos;re looking for?{' '}
             <a
               href="mailto:hello@jobblitz.ai"
-              className="text-blue-accent hover:text-blue-500 hover:underline font-semibold transition-colors duration-150"
+              className="text-navy font-semibold hover:text-navy-light hover:underline transition-colors duration-150"
             >
               Email us
             </a>
@@ -83,13 +83,13 @@ export default function FAQ() {
                   <DisclosureButton
                     className={cn(
                       'w-full flex items-center justify-between px-6 py-5 text-left gap-6 transition-colors duration-150 cursor-pointer group',
-                      open ? 'bg-blue-50/60' : 'hover:bg-slate-50'
+                      open ? 'bg-blue-muted/40' : 'hover:bg-slate-50'
                     )}
                   >
                     <span
                       className={cn(
                         'text-sm sm:text-base font-semibold transition-colors duration-150 leading-snug',
-                        open ? 'text-blue-accent' : 'text-navy group-hover:text-blue-accent'
+                        open ? 'text-navy' : 'text-slate-800 group-hover:text-navy'
                       )}
                     >
                       {faq.question}
@@ -98,7 +98,7 @@ export default function FAQ() {
                       className={cn(
                         'flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200',
                         open
-                          ? 'bg-blue-accent text-white'
+                          ? 'bg-blue-accent text-navy'
                           : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200'
                       )}
                     >
@@ -109,7 +109,7 @@ export default function FAQ() {
                     </span>
                   </DisclosureButton>
 
-                  <DisclosurePanel className="px-6 pb-6 pt-1 bg-blue-50/30">
+                  <DisclosurePanel className="px-6 pb-6 pt-1 bg-blue-muted/20">
                     <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
                       {faq.answer}
                     </p>
@@ -126,7 +126,7 @@ export default function FAQ() {
             Still have questions?{' '}
             <a
               href="mailto:hello@jobblitz.ai"
-              className="text-blue-accent font-semibold hover:underline"
+              className="text-navy font-semibold hover:underline"
             >
               hello@jobblitz.ai
             </a>

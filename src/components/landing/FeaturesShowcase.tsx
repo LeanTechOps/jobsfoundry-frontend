@@ -66,7 +66,7 @@ function AutoApplyPreview() {
           <p className="text-sm font-bold text-navy">Alex Johnson</p>
           <p className="text-xs text-slate-500">Senior Software Engineer · San Francisco</p>
         </div>
-        <span className="text-xs font-bold bg-blue-accent text-white px-2.5 py-1 rounded-full">47 sent today</span>
+        <span className="text-xs font-bold bg-blue-accent text-navy px-2.5 py-1 rounded-full">47 sent today</span>
       </div>
       {jobs.map((j) => (
         <div key={j.title} className="flex items-center gap-3 bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
@@ -87,7 +87,7 @@ function AutoApplyPreview() {
 
 function TrackerPreview() {
   const cols = [
-    { label: 'Applied', count: 47, color: 'bg-blue-accent', jobs: ['Stripe · SWE', 'Airbnb · Backend'] },
+    { label: 'Applied', count: 47, color: 'bg-navy', jobs: ['Stripe · SWE', 'Airbnb · Backend'] },
     { label: 'Interviewing', count: 6, color: 'bg-violet-500', jobs: ['Vercel · Platform', 'Notion · FS'] },
     { label: 'Offer', count: 1, color: 'bg-emerald-600', jobs: ['Figma · SWE II'] },
   ]
@@ -182,7 +182,7 @@ function AnalyticsPreview() {
         <div><p className="text-sm font-bold text-navy">Weekly Performance</p><p className="text-xs text-slate-500">Your analytics</p></div>
       </div>
       <div className="grid grid-cols-3 gap-3 mb-4">
-        {[{ label: 'Applied', val: '312', color: 'text-blue-accent' }, { label: 'Responses', val: '26', color: 'text-emerald-600' }, { label: 'Rate', val: '8.3%', color: 'text-violet-600' }].map((m) => (
+        {[{ label: 'Applied', val: '312', color: 'text-navy' }, { label: 'Responses', val: '26', color: 'text-emerald-600' }, { label: 'Rate', val: '8.3%', color: 'text-violet-600' }].map((m) => (
           <div key={m.label} className="bg-white border border-slate-100 rounded-xl p-3 text-center">
             <p className={`text-lg font-extrabold ${m.color}`}>{m.val}</p>
             <p className="text-[10px] text-slate-500 mt-0.5">{m.label}</p>
@@ -253,14 +253,14 @@ export default function FeaturesShowcase() {
   const Preview = feature.Preview
 
   return (
-    <section className="bg-gradient-to-br from-blue-50/60 via-white to-violet-50/30 py-12 sm:py-16 relative overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-96 h-96 rounded-full bg-blue-100/40 blur-3xl" />
+    <section className="bg-gradient-to-br from-blue-muted/40 via-white to-blue-muted/10 py-12 sm:py-16 relative overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute top-0 right-0 w-96 h-96 rounded-full bg-blue-muted/40 blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="text-center mb-12">
-          <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">All the tools you need</p>
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-3">All the tools you need</p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-3">
             The most powerful AI job search platform.
           </h2>

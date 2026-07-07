@@ -20,7 +20,7 @@ type CellVal = boolean | 'partial'
 
 function Cell({ value, isJobBlitz }: { value: CellVal; isJobBlitz?: boolean }) {
   if (value === true)
-    return <CheckIcon className={`w-5 h-5 mx-auto ${isJobBlitz ? 'text-blue-accent' : 'text-emerald-500'}`} />
+    return <CheckIcon className={`w-5 h-5 mx-auto ${isJobBlitz ? 'text-navy' : 'text-emerald-500'}`} />
   if (value === false)
     return <XMarkIcon className="w-5 h-5 mx-auto text-red-500" />
   return <MinusIcon className="w-4 h-4 mx-auto text-amber-400" />
@@ -40,7 +40,7 @@ export default function Comparison() {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <p className="text-sm font-semibold text-blue-accent uppercase tracking-widest mb-3">
+          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-3">
             Stack up
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-navy mb-4">
@@ -66,7 +66,7 @@ export default function Comparison() {
                 <th className="text-center py-4 px-5 bg-slate-100 text-slate-800 font-bold">Solo</th>
                 <th className="text-center py-4 px-5 bg-slate-100 text-slate-800 font-bold">AI Auto-Apply</th>
                 <th className="text-center py-4 px-5 bg-slate-100 text-slate-800 font-bold">Staffing Firms</th>
-                <th className="text-center py-4 px-5 bg-blue-accent text-white font-bold">
+                <th className="text-center py-4 px-5 bg-blue-accent text-navy font-bold">
                   JobBlitz ⚡
                 </th>
               </tr>
@@ -75,7 +75,7 @@ export default function Comparison() {
               {ROWS.map((row, i) => (
                 <tr
                   key={row.feature}
-                  className={`border-b border-slate-100 last:border-0 hover:bg-blue-50/30 transition-colors duration-100 cursor-default ${
+                  className={`border-b border-slate-100 last:border-0 hover:bg-blue-muted/20 transition-colors duration-100 cursor-default ${
                     i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'
                   }`}
                 >
@@ -83,7 +83,7 @@ export default function Comparison() {
                   <td className="py-3.5 px-5 text-center"><Cell value={row.solo as CellVal} /></td>
                   <td className="py-3.5 px-5 text-center"><Cell value={row.aiAutoApply as CellVal} /></td>
                   <td className="py-3.5 px-5 text-center"><Cell value={row.staffing as CellVal} /></td>
-                  <td className="py-3.5 px-5 text-center bg-blue-50/60">
+                  <td className="py-3.5 px-5 text-center bg-blue-muted/30">
                     <Cell value={row.jobblitz as CellVal} isJobBlitz />
                   </td>
                 </tr>
@@ -92,7 +92,7 @@ export default function Comparison() {
           </table>
         </motion.div>
 
-        {/* Verdict cards — below the table */}
+        {/* Verdict cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           {VERDICTS.map((v, i) => (
             <motion.div
@@ -103,16 +103,16 @@ export default function Comparison() {
               transition={{ delay: i * 0.08, duration: 0.4, ease: 'easeOut' }}
               className={`rounded-2xl p-5 text-center border transition-all duration-200 cursor-default ${
                 v.dark
-                  ? 'bg-blue-accent border-blue-accent text-white shadow-xl shadow-blue-200 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-blue-200'
+                  ? 'bg-navy border-navy text-white shadow-xl hover:-translate-y-1.5 hover:shadow-2xl'
                   : 'bg-slate-50 border-slate-200 hover:-translate-y-1 hover:shadow-md hover:border-slate-300'
               }`}
             >
               <p className="text-2xl mb-1.5">{v.emoji}</p>
-              <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${v.dark ? 'text-blue-200' : 'text-slate-500'}`}>
+              <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${v.dark ? 'text-blue-accent' : 'text-slate-500'}`}>
                 {v.label}
               </p>
               <p className={`font-bold text-sm ${v.dark ? 'text-white' : 'text-navy'}`}>{v.verdict}</p>
-              <p className={`text-xs mt-1 ${v.dark ? 'text-blue-100' : 'text-slate-500'}`}>{v.sub}</p>
+              <p className={`text-xs mt-1 ${v.dark ? 'text-white/60' : 'text-slate-500'}`}>{v.sub}</p>
             </motion.div>
           ))}
         </div>
@@ -121,7 +121,7 @@ export default function Comparison() {
         <div className="text-center">
           <Link
             href="/login?plan=free"
-            className="group inline-flex items-center gap-2 bg-blue-accent hover:bg-blue-500 active:scale-[0.98] text-white font-bold px-8 py-4 rounded-xl transition-all duration-150 text-base shadow-xl shadow-blue-200 hover:shadow-2xl hover:shadow-blue-200 cursor-pointer select-none"
+            className="group inline-flex items-center gap-2 bg-peach hover:bg-peach-hover active:scale-[0.98] text-white font-bold px-8 py-4 rounded-xl transition-all duration-150 text-base shadow-lg hover:shadow-xl cursor-pointer select-none"
           >
             Start for Free — No Credit Card Required
           </Link>
