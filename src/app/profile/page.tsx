@@ -13,6 +13,7 @@ import PersonalInfoCard from '@/components/profile/PersonalInfoCard'
 import ProfessionalLinksCard from '@/components/profile/ProfessionalLinksCard'
 import ResumesSection from '@/components/profile/ResumesSection'
 import JobPreferencesCard from '@/components/profile/JobPreferencesCard'
+import SkillsCard from '@/components/profile/SkillsCard'
 import { SectionLabel } from '@/components/profile/shared'
 import type { ProfileData } from '@/components/profile/types'
 
@@ -38,6 +39,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState<ProfileData>({
     headline: '', location: '', linkedinUrl: '', githubUrl: '', portfolioUrl: '',
   })
+  const [skills, setSkills] = useState<string[]>([])
 
   useEffect(() => {
     if (profile) {
@@ -48,6 +50,7 @@ export default function ProfilePage() {
         githubUrl: profile.githubUrl ?? '',
         portfolioUrl: profile.portfolioUrl ?? '',
       })
+      setSkills(profile.skills ?? [])
     }
   }, [profile])
 
@@ -64,7 +67,7 @@ export default function ProfilePage() {
   const onChange = (k: keyof ProfileData) => (v: string) => setForm((f) => ({ ...f, [k]: v }))
 
   const handleSave = async () => {
-    const payload = Object.fromEntries(Object.entries(form).filter(([, v]) => v !== ''))
+    const payload = { ...Object.fromEntries(Object.entries(form).filter(([, v]) => v !== '')), skills }
     try {
       await updateProfile.mutateAsync(payload as Partial<ProfileData>)
       toast.success('Profile saved!')
@@ -158,6 +161,11 @@ export default function ProfilePage() {
               onChange={onChange}
             />
           </div>
+        </div>
+
+        <div>
+          <SectionLabel>Skills</SectionLabel>
+          <SkillsCard skills={skills} onChange={setSkills} />
         </div>
 
         <ResumesSection

@@ -25,6 +25,24 @@ export function useAdminStats() {
   })
 }
 
+export function useAdminSkills() {
+  return useQuery({
+    queryKey: ['admin', 'skills'],
+    queryFn: () => api.get<string[]>('/admin/skills'),
+    staleTime: 2 * 60 * 1000,
+  })
+}
+
+export function useAdminResumeUrl(resumeId: string) {
+  return useQuery({
+    queryKey: ['admin', 'resumes', resumeId, 'url'],
+    queryFn: () => api.get<{ downloadUrl: string; fileName: string }>(`/admin/resumes/${resumeId}/url`),
+    enabled: false,
+    staleTime: 50 * 60 * 1000,
+    retry: 1,
+  })
+}
+
 // ── Users ──────────────────────────────────────────────────
 
 export interface AdminUserRow {
@@ -55,7 +73,7 @@ export interface UserFilters {
   page?: number
   limit?: number
   search?: string
-  skill?: string
+  skills?: string[]
   visaType?: string
   plan?: string
 }
@@ -65,7 +83,7 @@ function buildParams(filters: UserFilters) {
   if (filters.page) p.set('page', String(filters.page))
   if (filters.limit) p.set('limit', String(filters.limit))
   if (filters.search) p.set('search', filters.search)
-  if (filters.skill) p.set('skill', filters.skill)
+  filters.skills?.forEach((s) => p.append('skills', s))
   if (filters.visaType) p.set('visaType', filters.visaType)
   if (filters.plan) p.set('plan', filters.plan)
   return p.toString()

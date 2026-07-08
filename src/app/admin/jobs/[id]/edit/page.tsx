@@ -41,14 +41,13 @@ export default function EditJobPage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/admin/jobs"
-          className="p-1.5 rounded-xl hover:bg-blue-muted text-slate-400 hover:text-navy transition-colors"
+          className="p-1.5 rounded-xl hover:bg-blue-muted text-navy/40 hover:text-navy transition-colors"
         >
           <ChevronLeftIcon className="w-5 h-5" />
         </Link>
         <div>
-          <p className="text-xs font-bold tracking-widest text-blue-accent/70 uppercase">Jobs</p>
-          <h1 className="text-2xl font-bold text-navy">Edit Job</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{job.title} · {job.company}</p>
+          <h1 className="text-2xl font-semibold text-navy">Edit Job</h1>
+          <p className="text-sm text-navy/50 mt-0.5">{job.title} · {job.company}</p>
         </div>
       </div>
 

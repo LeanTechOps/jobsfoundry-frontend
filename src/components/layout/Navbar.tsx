@@ -14,6 +14,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { isAuthenticated, user, logout, loading } = useAuth()
+  const dashboardHref = user?.role === 'ADMIN' ? '/admin/dashboard' : '/dashboard'
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -64,7 +65,7 @@ export default function Navbar() {
           {loading ? null : isAuthenticated ? (
             <>
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 className="text-sm font-medium text-slate-600 hover:text-navy transition-colors duration-150 cursor-pointer"
               >
                 Dashboard
@@ -125,7 +126,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href={dashboardHref}
                   onClick={() => setMobileOpen(false)}
                   className="text-sm font-semibold text-navy py-2.5 px-3 rounded-lg hover:bg-slate-50 transition-all cursor-pointer"
                 >

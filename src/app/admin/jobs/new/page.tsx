@@ -10,14 +10,11 @@ export default function NewJobPage() {
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/admin/jobs"
-          className="p-1.5 rounded-xl hover:bg-blue-muted text-slate-400 hover:text-navy transition-colors"
+          className="p-1.5 rounded-xl hover:bg-blue-muted text-navy/40 hover:text-navy transition-colors"
         >
           <ChevronLeftIcon className="w-5 h-5" />
         </Link>
-        <div>
-          <p className="text-xs font-bold tracking-widest text-blue-accent/70 uppercase">Jobs</p>
-          <h1 className="text-2xl font-bold text-navy">New Job Listing</h1>
-        </div>
+        <h1 className="text-2xl font-semibold text-navy">New Job Listing</h1>
       </div>
       <JobForm />
     </div>

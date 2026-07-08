@@ -66,7 +66,7 @@ export default function AdminSidebar() {
         {user && (
           <div className="flex items-center gap-3 mb-3 px-1">
             {user.avatar ? (
-              <img src={user.avatar} alt="" className="w-8 h-8 rounded-full object-cover ring-2 ring-blue-accent/40" />
+              <img src={user.avatar} alt="" referrerPolicy="no-referrer" className="w-8 h-8 rounded-full object-cover ring-2 ring-blue-accent/40" />
             ) : (
               <div className="w-8 h-8 rounded-full bg-blue-accent/20 border border-blue-accent/30 flex items-center justify-center text-xs font-bold text-blue-accent">
                 {(user.firstName?.[0] ?? user.email[0]).toUpperCase()}
@@ -82,7 +82,7 @@ export default function AdminSidebar() {
         )}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-150"
+          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-150 cursor-pointer"
         >
           <ArrowLeftStartOnRectangleIcon className="w-4 h-4" />
           Sign out

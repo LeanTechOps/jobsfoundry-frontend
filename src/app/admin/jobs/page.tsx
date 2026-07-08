@@ -8,10 +8,10 @@ import { PlusIcon, MagnifyingGlassIcon, PencilSquareIcon, TrashIcon, BriefcaseIc
 import { toast } from 'react-toastify'
 
 const STATUS_PILL: Record<string, string> = {
-  ACTIVE: 'bg-blue-muted text-navy font-semibold',
-  DRAFT: 'bg-slate-100 text-slate-500',
+  ACTIVE: 'bg-blue-accent text-navy font-bold',
+  DRAFT: 'bg-navy/10 text-navy/60',
   PAUSED: 'bg-peach-muted text-peach font-semibold',
-  CLOSED: 'bg-slate-200 text-slate-400',
+  CLOSED: 'bg-navy/10 text-navy/40',
 }
 
 const JOB_TYPE_LABEL: Record<string, string> = {
@@ -61,9 +61,8 @@ export default function AdminJobsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-xs font-bold tracking-widest text-blue-accent/70 uppercase mb-1">Manage</p>
-          <h1 className="text-3xl font-bold text-navy">Jobs</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{total} listings</p>
+          <h1 className="text-2xl font-semibold text-navy">Manage Jobs</h1>
+          <p className="text-sm text-navy/50 mt-1">{total} listings</p>
         </div>
         <Link
           href="/admin/jobs/new"
@@ -77,7 +76,7 @@ export default function AdminJobsPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-6">
         <div className="relative flex-1 min-w-56">
-          <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy/40" />
           <input
             type="text"
             placeholder="Search title, company…"
@@ -99,16 +98,16 @@ export default function AdminJobsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden">
+      <div className="bg-white border border-navy/10 rounded-2xl overflow-hidden">
         {isLoading ? (
           <div className="flex items-center justify-center h-48">
             <div className="w-7 h-7 rounded-full border-2 border-navy border-t-blue-accent animate-spin" />
           </div>
         ) : jobs.length === 0 ? (
           <div className="text-center py-20">
-            <BriefcaseIcon className="w-10 h-10 mx-auto mb-3 text-slate-200" />
-            <p className="text-sm text-slate-400 font-medium">No jobs found</p>
-            <Link href="/admin/jobs/new" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-accent hover:text-blue-accent-hover transition-colors">
+            <BriefcaseIcon className="w-10 h-10 mx-auto mb-3 text-navy/30" />
+            <p className="text-base font-semibold text-navy">No jobs found</p>
+            <Link href="/admin/jobs/new" className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-navy hover:text-blue-accent transition-colors">
               <PlusIcon className="w-4 h-4" /> Add your first job
             </Link>
           </div>
@@ -116,11 +115,11 @@ export default function AdminJobsPage() {
           <table className="w-full text-sm">
             <thead className="bg-section-alt border-b border-slate-100">
               <tr>
-                <th className="text-left px-5 py-3.5 text-xs font-bold text-slate-400 uppercase tracking-wide">Job</th>
-                <th className="text-left px-4 py-3.5 text-xs font-bold text-slate-400 uppercase tracking-wide hidden md:table-cell">Type</th>
-                <th className="text-left px-4 py-3.5 text-xs font-bold text-slate-400 uppercase tracking-wide hidden lg:table-cell">Skills</th>
-                <th className="text-left px-4 py-3.5 text-xs font-bold text-slate-400 uppercase tracking-wide">Status</th>
-                <th className="text-right px-5 py-3.5 text-xs font-bold text-slate-400 uppercase tracking-wide">Actions</th>
+                <th className="text-left px-5 py-3.5 text-xs font-bold text-navy/50 uppercase tracking-wide">Job</th>
+                <th className="text-left px-4 py-3.5 text-xs font-bold text-navy/50 uppercase tracking-wide hidden md:table-cell">Type</th>
+                <th className="text-left px-4 py-3.5 text-xs font-bold text-navy/50 uppercase tracking-wide hidden lg:table-cell">Skills</th>
+                <th className="text-left px-4 py-3.5 text-xs font-bold text-navy/50 uppercase tracking-wide">Status</th>
+                <th className="text-right px-5 py-3.5 text-xs font-bold text-navy/50 uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -131,7 +130,7 @@ export default function AdminJobsPage() {
                       <CompanyLogo domain={job.companyDomain} name={job.company} />
                       <div>
                         <p className="font-semibold text-navy">{job.title}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">
+                        <p className="text-xs text-slate-600 mt-0.5">
                           {job.company}
                           {job.location ? ` · ${job.location}` : ''}
                           {' · '}{WORK_MODE_LABEL[job.workMode] ?? job.workMode}

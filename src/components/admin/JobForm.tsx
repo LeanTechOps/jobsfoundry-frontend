@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCreateJob, useUpdateJob } from '@/hooks/useJobs'
+import { useDebounce } from '@/hooks/useDebounce'
 import { toast } from 'react-toastify'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
@@ -56,8 +57,51 @@ const DEFAULT: JobFormData = {
   applicationUrl: '', closesAt: '',
 }
 
+// These must live OUTSIDE JobForm — defining components inside a render function
+// creates a new type on every render, causing React to unmount/remount on each keystroke.
+
+function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5">
+      <div className="border-l-2 border-blue-accent pl-3">
+        <h2 className="text-lg font-bold text-navy">{title}</h2>
+        {hint && <p className="text-sm text-slate-600 mt-0.5">{hint}</p>}
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-base font-semibold text-navy mb-2">
+        {label} {required && <span className="text-peach text-xl leading-none">*</span>}
+      </label>
+      {children}
+    </div>
+  )
+}
+
+function Checkbox({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
+  return (
+    <button
+      type="button"
+      onClick={(e) => { e.stopPropagation(); onChange(!checked) }}
+      className="flex items-center gap-2.5 cursor-pointer select-none group w-full text-left"
+    >
+      <div
+        className={`w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-all duration-150 ${checked ? 'bg-navy border-navy' : 'border-slate-300 group-hover:border-navy'}`}
+      >
+        {checked && <svg className="w-3 h-3 text-blue-accent" fill="none" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>}
+      </div>
+      <span className="text-base text-navy font-semibold">{label}</span>
+    </button>
+  )
+}
+
 const inputCls =
-  'w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-accent/40 focus:border-navy transition-colors placeholder:text-slate-300'
+  'w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm text-navy bg-white focus:outline-none focus:ring-2 focus:ring-blue-accent/50 focus:border-navy transition-colors placeholder:text-slate-500 placeholder:font-medium cursor-pointer'
 const textareaCls = `${inputCls} resize-y min-h-28 leading-relaxed`
 
 export default function JobForm({ initialData, jobId }: JobFormProps) {
@@ -66,6 +110,9 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
   const [skillInput, setSkillInput] = useState('')
   const createJob = useCreateJob()
   const updateJob = useUpdateJob(jobId ?? '')
+
+  // Debounce the domain so logo only fetches 700ms after the user stops typing
+  const debouncedDomain = useDebounce(form.companyDomain, 700)
 
   const set = (field: keyof JobFormData, value: unknown) =>
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -108,37 +155,6 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
     }
   }
 
-  const Section = ({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) => (
-    <div className="bg-white border border-slate-100 rounded-2xl p-6 space-y-4">
-      <div className="border-l-2 border-blue-accent pl-3">
-        <h2 className="text-base font-bold text-navy">{title}</h2>
-        {hint && <p className="text-xs text-slate-400 mt-0.5">{hint}</p>}
-      </div>
-      {children}
-    </div>
-  )
-
-  const Field = ({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) => (
-    <div>
-      <label className="block text-sm font-semibold text-slate-600 mb-1.5">
-        {label} {required && <span className="text-peach">*</span>}
-      </label>
-      {children}
-    </div>
-  )
-
-  const Checkbox = ({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) => (
-    <label className="flex items-center gap-2.5 cursor-pointer select-none group">
-      <div
-        onClick={() => onChange(!checked)}
-        className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-150 ${checked ? 'bg-navy border-navy' : 'border-slate-300 group-hover:border-navy/50'}`}
-      >
-        {checked && <svg className="w-3 h-3 text-blue-accent" fill="none" viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>}
-      </div>
-      <span className="text-sm text-slate-700 font-medium">{label}</span>
-    </label>
-  )
-
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Basic info */}
@@ -151,24 +167,32 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
             <input className={inputCls} value={form.company} onChange={(e) => set('company', e.target.value)} required placeholder="e.g. Stripe" />
           </Field>
           <Field label="Company Domain">
-            <div className="flex items-center gap-3">
-              <input
-                className={inputCls}
-                value={form.companyDomain}
-                onChange={(e) => set('companyDomain', e.target.value.toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0])}
-                placeholder="stripe.com"
-              />
-              {form.companyDomain && (
+            <input
+              className={inputCls}
+              value={form.companyDomain}
+              onChange={(e) => set('companyDomain', e.target.value.toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0])}
+              placeholder="stripe.com"
+            />
+            <p className="text-sm text-slate-500 mt-1.5">Domain only — e.g. <span className="font-mono text-navy">stripe.com</span></p>
+            {debouncedDomain && (
+              <div className="mt-3 flex items-center gap-3 p-3 bg-section-alt rounded-xl border border-slate-200">
                 <img
-                  src={`https://logo.clearbit.com/${form.companyDomain}`}
+                  key={debouncedDomain}
+                  src={`https://www.google.com/s2/favicons?domain=${debouncedDomain}&sz=64`}
                   alt=""
-                  className="w-9 h-9 rounded-lg object-contain border border-slate-100 bg-white p-0.5 shrink-0"
-                  onError={(e) => { e.currentTarget.style.display = 'none' }}
-                  onLoad={(e) => { e.currentTarget.style.display = 'block' }}
+                  className="w-10 h-10 rounded-lg object-contain border border-slate-200 bg-white p-1 shrink-0"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; (e.currentTarget.nextSibling as HTMLElement)?.style.setProperty('display','flex') }}
+                  onLoad={(e) => { e.currentTarget.style.display = 'block'; (e.currentTarget.nextSibling as HTMLElement)?.style.setProperty('display','none') }}
                 />
-              )}
-            </div>
-            <p className="text-xs text-slate-400 mt-1">Domain only — e.g. <span className="font-mono">stripe.com</span></p>
+                <div className="w-10 h-10 rounded-lg border border-slate-200 bg-slate-100 items-center justify-center text-sm font-bold text-slate-500 shrink-0 hidden">
+                  {debouncedDomain[0].toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-navy">{debouncedDomain}</p>
+                  <p className="text-xs text-slate-500">Company logo preview</p>
+                </div>
+              </div>
+            )}
           </Field>
           <Field label="Location">
             <input className={inputCls} value={form.location} onChange={(e) => set('location', e.target.value)} placeholder="New York, NY" />
@@ -181,7 +205,7 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
                 key={m}
                 type="button"
                 onClick={() => set('workMode', m)}
-                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all duration-150 ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 cursor-pointer ${
                   form.workMode === m
                     ? 'bg-navy text-blue-accent shadow-sm'
                     : 'text-slate-500 hover:text-navy'
@@ -244,7 +268,7 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
           <button
             type="button"
             onClick={addSkill}
-            className="px-4 py-2 bg-blue-muted hover:bg-blue-accent/20 text-navy font-semibold rounded-xl text-sm transition-colors"
+            className="px-4 py-2 bg-blue-muted hover:bg-blue-accent/20 text-navy font-semibold rounded-xl text-sm transition-colors cursor-pointer"
           >
             Add
           </button>
@@ -254,7 +278,7 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
             {form.skills.map((s) => (
               <span key={s} className="flex items-center gap-1.5 bg-navy text-blue-accent text-xs font-bold px-3 py-1.5 rounded-full">
                 {s}
-                <button type="button" onClick={() => removeSkill(s)} className="hover:text-peach transition-colors">
+                <button type="button" onClick={() => removeSkill(s)} className="hover:text-peach transition-colors cursor-pointer">
                   <XMarkIcon className="w-3.5 h-3.5" />
                 </button>
               </span>
@@ -291,9 +315,16 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
       </Section>
 
       {/* Visa */}
-      <Section title="Visa Sponsorship">
+      <button
+        type="button"
+        onClick={() => set('visaSponsorship', !form.visaSponsorship)}
+        className="w-full text-left bg-white border border-slate-200 rounded-2xl p-6 space-y-5 cursor-pointer hover:border-navy/30 transition-colors group"
+      >
+        <div className="border-l-2 border-blue-accent pl-3">
+          <h2 className="text-lg font-bold text-navy">Visa Sponsorship</h2>
+        </div>
         <Checkbox checked={form.visaSponsorship} onChange={(v) => set('visaSponsorship', v)} label="This position offers visa sponsorship" />
-      </Section>
+      </button>
 
       {/* Application */}
       <Section title="Application Details">
@@ -312,7 +343,7 @@ export default function JobForm({ initialData, jobId }: JobFormProps) {
         <button
           type="button"
           onClick={() => router.push('/admin/jobs')}
-          className="px-5 py-2.5 text-sm font-semibold border-2 border-slate-200 rounded-xl text-slate-600 hover:border-navy/30 hover:bg-section-alt transition-all duration-150"
+          className="px-5 py-2.5 text-sm font-semibold border-2 border-slate-200 rounded-xl text-slate-600 hover:border-navy/30 hover:bg-section-alt transition-all duration-150 cursor-pointer"
         >
           Cancel
         </button>
