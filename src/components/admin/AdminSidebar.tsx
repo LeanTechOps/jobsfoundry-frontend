@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Logo from '@/components/Logo'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import {
@@ -32,7 +33,7 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div className="px-6 py-5 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold tracking-tight text-white">JobsFoundry</span>
+          <Logo height={28} className="brightness-0 invert" />
           <span className="text-[10px] font-bold bg-blue-accent text-navy px-2 py-0.5 rounded-full leading-none">
             ADMIN
           </span>

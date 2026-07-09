@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useAuth } from '@/context/AuthContext'
 import { cn } from '@/lib/utils'
+import Logo from '@/components/Logo'
 
 const NAV_LINKS = [
   { label: 'Features', href: '/#features' },
@@ -39,14 +40,8 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-1.5 flex-shrink-0 group cursor-pointer"
-        >
-          <span className="text-xl font-bold tracking-tight">
-            <span className="text-navy group-hover:text-navy-light transition-colors duration-150">Jobs</span>
-            <span className="text-navy group-hover:text-navy-light transition-colors duration-150">Foundry</span>
-          </span>
+        <Link href="/" className="flex-shrink-0 cursor-pointer">
+          <Logo height={32} />
         </Link>
 
         {/* Desktop nav */}

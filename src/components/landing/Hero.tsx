@@ -71,10 +71,10 @@ export default function Hero() {
           animate="show"
           className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-navy leading-[1.12] mb-5"
         >
-          Stop Grinding. Start
+          Where Talent Meets Opportunity.
           <br />
           <span className="relative inline-block">
-            <span className="text-navy">Getting Hired.</span>
+            <span className="text-navy">Your Career, Reimagined.</span>
             <span
               aria-hidden
               className="absolute -bottom-1 left-0 right-0 h-[3px] rounded-full bg-blue-accent opacity-70"

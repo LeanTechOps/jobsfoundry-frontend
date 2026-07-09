@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
 import { CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid'
+import Logo from '@/components/Logo'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000'
 
@@ -76,10 +77,8 @@ function LoginPageInner() {
       {/* ── Left panel — navy ─────────────────────────────────────── */}
       <div className="hidden lg:flex lg:w-1/2 bg-navy flex-col justify-between px-12 py-10">
         {/* Logo */}
-        <Link href="/" className="group cursor-pointer">
-          <span className="text-xl font-bold text-white">
-            Jobs<span className="text-blue-accent">Foundry</span>
-          </span>
+        <Link href="/" className="cursor-pointer">
+          <Logo height={36} className="brightness-0 invert" />
         </Link>
 
         {/* Middle */}
@@ -88,9 +87,9 @@ function LoginPageInner() {
             Why job seekers choose us
           </p>
           <h2 className="text-3xl font-extrabold text-white mb-8 leading-snug">
-            Land your dream job
+            Where Talent Meets Opportunity.
             <br />
-            <span className="text-blue-accent">10× faster with AI</span>
+            <span className="text-blue-accent">Your Career, Reimagined.</span>
           </h2>
 
           <ul className="space-y-4 mb-10">
@@ -141,11 +140,8 @@ function LoginPageInner() {
 
         {/* Mobile logo */}
         <div className="lg:hidden mb-10">
-          <Link href="/" className="group cursor-pointer">
-            <span className="text-2xl font-bold">
-              <span className="text-navy">Jobs</span>
-              <span className="text-navy">Foundry</span>
-            </span>
+          <Link href="/" className="cursor-pointer">
+            <Logo height={34} />
           </Link>
         </div>
 

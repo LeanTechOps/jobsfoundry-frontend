@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import Logo from '@/components/Logo'
 
 const ERROR_MESSAGES: Record<string, string> = {
   google_auth_failed: 'Google authentication failed. Please try again.',
