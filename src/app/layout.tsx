@@ -14,9 +14,9 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'JobsFoundry — Apply to 100+ Jobs Daily, Automatically',
+  title: 'JobsFoundry — Where Talent Meets Opportunity. Your Career, Reimagined.',
   description:
-    'JobsFoundry automates your job applications across 500,000+ company career pages. Set your preferences once and let AI land you more interviews.',
+    'JobsFoundry connects top talent with the right opportunities. Where Talent Meets Opportunity — Your Career, Reimagined.',
   keywords: ['job search', 'auto apply', 'job automation', 'AI job search', 'job applications'],
   icons: {
     icon: [
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     shortcut: '/logo.png',
   },
   openGraph: {
-    title: 'JobsFoundry — Apply to 100+ Jobs Daily, Automatically',
-    description: 'Automate your job search with AI. Get 3x more interviews.',
+    title: 'JobsFoundry — Where Talent Meets Opportunity. Your Career, Reimagined.',
+    description: 'Where Talent Meets Opportunity. Your Career, Reimagined.',
     type: 'website',
     images: [{ url: '/logo.png', width: 512, height: 512 }],
   },
