@@ -21,6 +21,15 @@ export interface ApplicationJob {
   salaryNegotiable: boolean
   visaSponsorship: boolean
   status: string
+  description: string
+  responsibilities: string | null
+  requirements: string | null
+  benefits: string | null
+  skills: string[]
+  applicationUrl: string | null
+  closesAt: string | null
+  createdAt: string
+  postedBy: { id: string; firstName: string | null; lastName: string | null; email: string } | null
 }
 
 export interface ApplicationResume {

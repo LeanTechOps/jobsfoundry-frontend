@@ -106,7 +106,14 @@ export default function DashboardPage() {
 
         {/* Applications */}
         <div>
-          <p className="text-sm font-semibold text-navy uppercase tracking-widest mb-4">My Applications</p>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-semibold text-navy uppercase tracking-widest">My Applications</p>
+            {applications.length > 5 && (
+              <Link href="/applications" className="text-sm font-semibold text-navy hover:text-navy-light underline underline-offset-2 transition-colors">
+                View all {applications.length}
+              </Link>
+            )}
+          </div>
           {appsLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
@@ -123,9 +130,17 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {applications.map((app) => (
+              {applications.slice(0, 5).map((app) => (
                 <ApplicationCard key={app.id} app={app} />
               ))}
+              {applications.length > 5 && (
+                <Link
+                  href="/applications"
+                  className="block text-center py-3 rounded-2xl border border-dashed border-navy/20 text-sm font-semibold text-navy/60 hover:text-navy hover:border-navy/40 transition-colors"
+                >
+                  View all {applications.length} applications →
+                </Link>
+              )}
             </div>
           )}
         </div>

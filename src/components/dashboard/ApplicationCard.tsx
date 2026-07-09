@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { CalendarDaysIcon, DocumentIcon } from '@heroicons/react/24/outline'
 import { JobApplication, ApplicationStatus } from '@/hooks/useApplications'
 
@@ -23,7 +24,10 @@ export default function ApplicationCard({ app }: { app: JobApplication }) {
   const isPast = nextInterview ? nextInterview < new Date() : false
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-start gap-4">
+    <Link
+      href={`/applications/${app.id}`}
+      className="block bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-start gap-4 hover:border-navy/30 hover:shadow-md transition-all duration-150 cursor-pointer"
+    >
       {/* Company logo / initial */}
       <div className="shrink-0">
         {app.companyLogoUrl ? (
@@ -112,6 +116,6 @@ export default function ApplicationCard({ app }: { app: JobApplication }) {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
