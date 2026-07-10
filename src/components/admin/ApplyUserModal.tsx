@@ -67,7 +67,7 @@ export default function ApplyUserModal({ jobId, jobTitle, onClose }: Props) {
         resumeId: selectedResumeId ?? undefined,
         notes: notes.trim() || undefined,
         status,
-        interviewAt: status === 'INTERVIEW' && interviewAt ? interviewAt : undefined,
+        interviewAt: status === 'INTERVIEW' && interviewAt ? new Date(interviewAt).toISOString() : undefined,
       })
       setStep('success')
     } catch (err: any) {

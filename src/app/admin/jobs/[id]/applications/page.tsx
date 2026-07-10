@@ -1,6 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+
+/** Convert a UTC ISO string to the local datetime-local input format */
+function toLocalInput(utc: string) {
+  const d = new Date(utc)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+/** Convert datetime-local string (local time) to UTC ISO string for the backend */
+function toUTC(local: string) {
+  return new Date(local).toISOString()
+}
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -129,7 +141,7 @@ function ApplicationCard({
   const [editing, setEditing] = useState(false)
   const [status, setStatus] = useState<ApplicationStatus>(app.status)
   const [interviewAt, setInterviewAt] = useState(
-    app.interviewAt ? new Date(app.interviewAt).toISOString().slice(0, 16) : ''
+    app.interviewAt ? toLocalInput(app.interviewAt) : ''
   )
   const [notes, setNotes] = useState(app.notes ?? '')
   const [saving, setSaving] = useState(false)
@@ -138,7 +150,7 @@ function ApplicationCard({
     setSaving(true)
     await onUpdate({
       status,
-      interviewAt: status === 'INTERVIEW' && interviewAt ? interviewAt : null,
+      interviewAt: status === 'INTERVIEW' && interviewAt ? toUTC(interviewAt) : null,
       notes: notes.trim() || undefined,
     })
     setSaving(false)
@@ -148,7 +160,7 @@ function ApplicationCard({
 
   const handleCancel = () => {
     setStatus(app.status)
-    setInterviewAt(app.interviewAt ? new Date(app.interviewAt).toISOString().slice(0, 16) : '')
+    setInterviewAt(app.interviewAt ? toLocalInput(app.interviewAt) : '')
     setNotes(app.notes ?? '')
     setEditing(false)
   }
