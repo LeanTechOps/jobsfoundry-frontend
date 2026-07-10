@@ -46,9 +46,9 @@ export default function LandingPage() {
             </div>
 
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white mb-5 leading-tight">
-              Ready to Foundry your
+              Shape Your Next Career Move
               <br />
-              <span className="text-blue-accent">job search?</span>
+              <span className="text-blue-accent">with JobsFoundry</span>
             </h2>
             <p className="text-white/70 mb-10 text-lg max-w-xl mx-auto leading-relaxed">
               Join 50,000+ job seekers who automated their applications with AI.

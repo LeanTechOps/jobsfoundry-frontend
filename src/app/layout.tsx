@@ -14,6 +14,7 @@ const jakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jobsfoundry.com'),
   title: 'JobsFoundry — Where Talent Meets Opportunity. Your Career, Reimagined.',
   description:
     'JobsFoundry connects top talent with the right opportunities. Where Talent Meets Opportunity — Your Career, Reimagined.',
@@ -30,7 +31,20 @@ export const metadata: Metadata = {
     title: 'JobsFoundry — Where Talent Meets Opportunity. Your Career, Reimagined.',
     description: 'Where Talent Meets Opportunity. Your Career, Reimagined.',
     type: 'website',
-    images: [{ url: '/logo.png', width: 512, height: 512 }],
+    url: 'https://jobsfoundry.com',
+    siteName: 'JobsFoundry',
+    images: [{
+      url: 'https://jobsfoundry.com/og-image.png',
+      width: 1200,
+      height: 630,
+      alt: 'JobsFoundry — Where Talent Meets Opportunity',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'JobsFoundry — Where Talent Meets Opportunity. Your Career, Reimagined.',
+    description: 'Where Talent Meets Opportunity. Your Career, Reimagined.',
+    images: ['https://jobsfoundry.com/og-image.png'],
   },
 }
 
